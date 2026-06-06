@@ -88,6 +88,121 @@
 </head>
 <body class="min-h-screen overflow-x-hidden antialiased flex flex-col font-sans">
 
+  <!-- ==================== SCREEN: LOGIN ==================== -->
+  <section id="screen-login" class="fixed inset-0 w-full h-full flex items-center justify-center bg-sand z-[100] p-6 overflow-y-auto">
+    <div class="w-full max-w-md bg-white rounded-2xl border border-cyprus/10 shadow-xl p-8 flex flex-col gap-6">
+      <!-- Brand Header -->
+      <div class="flex flex-col items-center text-center gap-2">
+        <div class="w-12 h-12 rounded-xl bg-cyprus text-sand flex items-center justify-center text-2xl font-bold">
+          <i class="fas fa-handshake"></i>
+        </div>
+        <h2 class="text-xl font-bold text-cyprus">Welcome to VendorBridge</h2>
+        <p class="text-xs text-darkText/60">Procurement & Vendor ERP Portal Login</p>
+      </div>
+
+      <!-- Tab Buttons -->
+      <div class="flex bg-sandDark/35 p-1 rounded-xl">
+        <button onclick="toggleLoginTab('login')" id="btn-tab-login" class="flex-1 py-1.5 text-xs font-bold rounded-lg bg-white text-cyprus shadow-sm transition-all">Login</button>
+        <button onclick="toggleLoginTab('register')" id="btn-tab-register" class="flex-1 py-1.5 text-xs font-semibold rounded-lg text-cyprus/75 hover:bg-white/40 transition-all">Register</button>
+      </div>
+
+      <!-- Login Form Content -->
+      <div id="login-form-area" class="flex flex-col gap-4">
+        <div>
+          <label class="block text-xs font-bold text-cyprus mb-1.5 uppercase">Email Address</label>
+          <input type="email" id="login-email" value="p.sharma@acme.com" placeholder="name@company.com" class="w-full px-3 py-2 bg-sand/35 border border-cyprus/15 rounded-xl text-xs focus:outline-none focus:border-cyprus">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-cyprus mb-1.5 uppercase">Password</label>
+          <input type="password" id="login-password" value="••••••••" class="w-full px-3 py-2 bg-sand/35 border border-cyprus/15 rounded-xl text-xs focus:outline-none focus:border-cyprus">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-cyprus mb-1.5 uppercase">Select Access Role</label>
+          <select id="login-role" class="w-full px-3 py-2 bg-sand/35 border border-cyprus/15 rounded-xl text-xs focus:outline-none focus:border-cyprus text-cyprus font-semibold">
+            <option value="officer">Procurement Officer (Priya Sharma)</option>
+            <option value="manager">Manager / Approver (Arun)</option>
+            <option value="vendor">Vendor (Delhi Hardware Hub)</option>
+            <option value="admin">System Administrator</option>
+          </select>
+        </div>
+        <div class="flex justify-between items-center text-xs">
+          <label class="flex items-center gap-2 text-darkText/65 cursor-pointer">
+            <input type="checkbox" checked class="rounded border-cyprus/10 text-cyprus"> Remember session
+          </label>
+          <a href="#" onclick="alert('Forgot Password: Password reset instructions sent to your email.')" class="text-cyprus hover:underline font-semibold">Forgot Password?</a>
+        </div>
+        <button onclick="loginUser()" class="w-full py-2.5 bg-cyprus text-sand hover:text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 mt-2 shadow-md hover:bg-[#002d2b]">
+          <i class="fas fa-sign-in-alt"></i> Access ERP Workspace
+        </button>
+      </div>
+
+      <!-- Register Form Content -->
+      <div id="register-form-area" class="hidden flex flex-col gap-4">
+        <div>
+          <label class="block text-xs font-bold text-cyprus mb-1.5 uppercase">Full Name</label>
+          <input type="text" id="reg-name" placeholder="John Doe" class="w-full px-3 py-2 bg-sand/35 border border-cyprus/15 rounded-xl text-xs focus:outline-none focus:border-cyprus">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-cyprus mb-1.5 uppercase">Company Email</label>
+          <input type="email" id="reg-email" placeholder="john.doe@company.com" class="w-full px-3 py-2 bg-sand/35 border border-cyprus/15 rounded-xl text-xs focus:outline-none focus:border-cyprus">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-cyprus mb-1.5 uppercase">Request ERP Role</label>
+          <select id="reg-role" class="w-full px-3 py-2 bg-sand/35 border border-cyprus/15 rounded-xl text-xs focus:outline-none focus:border-cyprus text-cyprus">
+            <option value="officer">Procurement Officer</option>
+            <option value="manager">Manager / Approver</option>
+            <option value="vendor">Vendor / Supplier Portal</option>
+          </select>
+        </div>
+        <button onclick="alert('Registration Request Submitted! Admin approval is pending.')" class="w-full py-2.5 bg-cyprus text-sand hover:text-white rounded-xl text-xs font-bold transition-all mt-2">
+          <i class="fas fa-user-plus"></i> Submit Registration
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vendor Register Modal Dialog -->
+  <div id="vendor-modal" class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-[110] p-4">
+    <div class="w-full max-w-md bg-white rounded-2xl border border-cyprus/10 shadow-2xl p-6 flex flex-col gap-4">
+      <div class="flex justify-between items-center pb-3 border-b border-cyprus/5">
+        <h3 class="text-sm font-bold text-cyprus uppercase"><i class="fas fa-store-alt mr-1"></i> Register New Supplier</h3>
+        <button onclick="closeVendorModal()" class="text-cyprus/40 hover:text-cyprus"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="flex flex-col gap-3 text-xs">
+        <div>
+          <label class="block font-bold text-cyprus mb-1 uppercase">Vendor Name</label>
+          <input type="text" id="vm-name" placeholder="Delhi Hardware Hub" class="w-full px-3 py-2 bg-sand/35 border border-cyprus/10 rounded-xl focus:outline-none">
+        </div>
+        <div>
+          <label class="block font-bold text-cyprus mb-1 uppercase">Category</label>
+          <select id="vm-category" class="w-full px-3 py-2 bg-sand/35 border border-cyprus/10 rounded-xl focus:outline-none text-cyprus">
+            <option>IT Hardware</option>
+            <option>Office Supplies</option>
+            <option>Furniture</option>
+            <option>Logistics</option>
+            <option>Stationery</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-bold text-cyprus mb-1 uppercase">GST Number</label>
+          <input type="text" id="vm-gst" placeholder="07AAAAD1234F1Z1" class="w-full px-3 py-2 bg-sand/35 border border-cyprus/10 rounded-xl font-mono focus:outline-none">
+        </div>
+        <div>
+          <label class="block font-bold text-cyprus mb-1 uppercase">Email Address</label>
+          <input type="email" id="vm-email" placeholder="sales@delhihardware.com" class="w-full px-3 py-2 bg-sand/35 border border-cyprus/10 rounded-xl focus:outline-none">
+        </div>
+        <div>
+          <label class="block font-bold text-cyprus mb-1 uppercase">Rating Score</label>
+          <input type="number" id="vm-rating" placeholder="4.8" min="1" max="5" step="0.1" class="w-full px-3 py-2 bg-sand/35 border border-cyprus/10 rounded-xl focus:outline-none">
+        </div>
+      </div>
+      <div class="flex justify-end gap-3 pt-3 border-t border-cyprus/5">
+        <button onclick="closeVendorModal()" class="px-4 py-2 bg-sandDark text-cyprus rounded-xl text-xs font-semibold hover:bg-sandDark/75 transition-all">Cancel</button>
+        <button onclick="saveVendorProfile()" class="px-4 py-2 bg-cyprus text-sand hover:text-white rounded-xl text-xs font-bold hover:bg-[#002d2b] transition-all">Register Partner</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Top Global Demo Banner for Hackathon Demo navigation -->
   <div class="bg-cyprus text-sand px-4 py-2 flex flex-wrap justify-between items-center text-xs font-semibold border-b border-white/10 z-50">
     <div class="flex items-center gap-2">
@@ -193,14 +308,19 @@
       </div>
 
       <!-- User footer inside sidebar -->
-      <div class="p-4 border-t border-white/5 bg-black/10 flex items-center gap-3">
-        <div id="user-avatar" class="w-9 h-9 rounded-full bg-mint text-cyprus font-bold flex items-center justify-center">
-          P
+      <div class="p-4 border-t border-white/5 bg-black/10 flex flex-col gap-3">
+        <div class="flex items-center gap-3">
+          <div id="user-avatar" class="w-9 h-9 rounded-full bg-mint text-cyprus font-bold flex items-center justify-center">
+            P
+          </div>
+          <div class="overflow-hidden flex-1">
+            <span id="user-display-name" class="block text-sm font-semibold text-white truncate">Priya Sharma</span>
+            <span id="user-display-role" class="block text-[10px] text-white/50 truncate">Procurement Officer</span>
+          </div>
         </div>
-        <div class="overflow-hidden">
-          <span id="user-display-name" class="block text-sm font-semibold text-white truncate">Priya Sharma</span>
-          <span id="user-display-role" class="block text-[10px] text-white/50 truncate">Procurement Officer</span>
-        </div>
+        <button onclick="logoutUser()" class="w-full py-1 bg-white/5 hover:bg-white/10 text-white/60 hover:text-white rounded text-xs font-semibold transition-all">
+          <i class="fas fa-sign-out-alt mr-1"></i> Logout
+        </button>
       </div>
     </aside>
 
@@ -738,8 +858,8 @@
               <p class="text-xs text-darkText/60">Generate formal vendor documents and calculate invoice receipts.</p>
             </div>
             <div class="flex gap-2">
-              <button onclick="alert('Printing document preview...')" class="px-3 py-1.5 bg-sandDark text-cyprus rounded-xl text-xs font-semibold hover:bg-sandDark/75 transition-all">
-                <i class="fas fa-print mr-1"></i> Print PO
+              <button onclick="printCurrentDocument()" class="px-3 py-1.5 bg-sandDark text-cyprus rounded-xl text-xs font-semibold hover:bg-sandDark/75 transition-all">
+                <i class="fas fa-print mr-1"></i> Print
               </button>
               <button id="btn-email-po" onclick="sendInvoiceEmail()" class="px-3 py-1.5 bg-cyprus text-sand hover:text-white rounded-xl text-xs font-semibold hover:bg-[#002d2b] transition-all">
                 <i class="fas fa-envelope mr-1"></i> Send PO Email
@@ -747,9 +867,15 @@
             </div>
           </div>
 
+          <!-- Document Selector Tabs -->
+          <div class="flex bg-sandDark/35 p-1 rounded-xl w-72 mb-4 animate-fade-in" id="doc-type-tabs">
+            <button onclick="toggleDocPreview('po')" id="btn-doc-po" class="flex-1 py-1 text-xs font-bold rounded-lg bg-white text-cyprus shadow-sm transition-all">Purchase Order</button>
+            <button onclick="toggleDocPreview('invoice')" id="btn-doc-invoice" class="flex-1 py-1 text-xs font-semibold rounded-lg text-cyprus/60 hover:bg-white/40 transition-all cursor-not-allowed opacity-50" disabled>Vendor Invoice</button>
+          </div>
+
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Left 2 Cols: Document layout -->
-            <div class="lg:col-span-2 bg-white rounded-2xl border border-cyprus/5 shadow-md p-8 text-xs relative overflow-hidden">
+            <div class="lg:col-span-2 bg-white rounded-2xl border border-cyprus/5 shadow-md p-8 text-xs relative overflow-hidden" id="po-invoice-document-body">
               <!-- Confirmed Watermark -->
               <div id="confirmed-watermark" class="hidden absolute top-12 right-12 border-4 border-green-600 text-green-600 font-bold text-xl uppercase tracking-widest px-4 py-2 rotate-12 rounded opacity-80">
                 Approved
@@ -859,7 +985,7 @@
               <h2 class="text-xl font-bold text-cyprus">Vendors Master</h2>
               <p class="text-xs text-darkText/60">Configure profiles, categories, GST registrations, and supplier scores.</p>
             </div>
-            <button onclick="alert('Opening Vendor Register modal...')" class="px-4 py-2 bg-cyprus text-sand hover:text-white font-bold rounded-xl text-xs flex items-center gap-2 hover:bg-[#002d2b] transition-all">
+            <button onclick="openVendorModal()" class="px-4 py-2 bg-cyprus text-sand hover:text-white font-bold rounded-xl text-xs flex items-center gap-2 hover:bg-[#002d2b] transition-all">
               <i class="fas fa-plus"></i> Add Vendor Profile
             </button>
           </div>
@@ -924,7 +1050,7 @@
               <h2 class="text-xl font-bold text-cyprus">Procurement Analytics</h2>
               <p class="text-xs text-darkText/60">Spending distributions, monthly trends, and cost efficiency reporting.</p>
             </div>
-            <button onclick="alert('Exporting data matrix to CSV...')" class="px-4 py-2 bg-cyprus text-sand hover:text-white font-bold rounded-xl text-xs flex items-center gap-2 hover:bg-[#002d2b] transition-all">
+            <button onclick="downloadCSV()" class="px-4 py-2 bg-cyprus text-sand hover:text-white font-bold rounded-xl text-xs flex items-center gap-2 hover:bg-[#002d2b] transition-all">
               <i class="fas fa-file-csv"></i> Export CSV
             </button>
           </div>
@@ -1026,6 +1152,11 @@
                       </tr>
                     </tbody>
                   </table>
+                </div>
+
+                <div class="mt-2">
+                  <label class="block font-bold text-cyprus uppercase mb-1.5">Quotation Notes / Terms & Conditions</label>
+                  <textarea id="vp-notes" rows="2" placeholder="Enter payment terms, shipping conditions, or additional quote details..." class="w-full px-3 py-2 bg-sand/30 border border-cyprus/10 rounded-xl focus:outline-none"></textarea>
                 </div>
 
                 <div class="pt-4 border-t border-cyprus/5 flex justify-end gap-3">
@@ -1718,6 +1849,527 @@
       });
     }
 
+    // --- Dynamic ERP Prototype Additional Logic (Checklist Compliance) ---
+
+    // Toggle tabs in Login screen
+    function toggleLoginTab(tab) {
+      const loginArea = document.getElementById('login-form-area');
+      const regArea = document.getElementById('register-form-area');
+      const loginBtn = document.getElementById('btn-tab-login');
+      const regBtn = document.getElementById('btn-tab-register');
+
+      if (!loginArea || !regArea || !loginBtn || !regBtn) return;
+
+      if (tab === 'login') {
+        loginArea.classList.remove('hidden');
+        regArea.classList.add('hidden');
+        loginBtn.className = "flex-1 py-1.5 text-xs font-bold rounded-lg bg-white text-cyprus shadow-sm transition-all";
+        regBtn.className = "flex-1 py-1.5 text-xs font-semibold rounded-lg text-cyprus/75 hover:bg-white/40 transition-all";
+      } else {
+        loginArea.classList.add('hidden');
+        regArea.classList.remove('hidden');
+        regBtn.className = "flex-1 py-1.5 text-xs font-bold rounded-lg bg-white text-cyprus shadow-sm transition-all";
+        loginBtn.className = "flex-1 py-1.5 text-xs font-semibold rounded-lg text-cyprus/75 hover:bg-white/40 transition-all";
+      }
+    }
+
+    // Login process
+    function loginUser() {
+      const email = document.getElementById('login-email').value;
+      const role = document.getElementById('login-role').value;
+      if (!email) {
+        alert("Please enter a valid email.");
+        return;
+      }
+      
+      const loginScreen = document.getElementById('screen-login');
+      if (loginScreen) {
+        switchRole(role);
+        loginScreen.classList.add('hidden');
+      }
+    }
+
+    // Logout
+    function logoutUser() {
+      const loginScreen = document.getElementById('screen-login');
+      if (loginScreen) {
+        loginScreen.classList.remove('hidden');
+      }
+    }
+
+    // Vendor Modal actions
+    function openVendorModal() {
+      const modal = document.getElementById('vendor-modal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeVendorModal() {
+      const modal = document.getElementById('vendor-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    // Dynamic suppliers database
+    let suppliersDatabase = [
+      { name: "Tahsan Khan", company: "Uistore.org", payables: "$635", email: "tahsankhan380@gmail.com", category: "IT Hardware", gst: "07AAAAD1234F1Z1", rating: 4.8, status: "Active" },
+      { name: "Anwar Hussen", company: "Uistore.org", payables: "$748", email: "anwarhussen247@gmail.com", category: "IT Hardware", gst: "09BBBBD5678K2Z5", rating: 4.2, status: "Active" },
+      { name: "Hasan Khan", company: "Uistore.org", payables: "$759", email: "hasankhan325@gmail.com", category: "Furniture", gst: "08CCCCD9101M3Z0", rating: 3.9, status: "Active" },
+      { name: "Jaman Khan", company: "Uistore.org", payables: "$829", email: "jamankhan435@gmail.com", category: "Logistics", gst: "07DDDDD2345N4Z8", rating: 4.6, status: "Active" },
+      { name: "Herry Brooks", company: "Uistore.org", payables: "$213", email: "herrybrooks234@gmail.com", category: "Stationery", gst: "07EEEEE3456P5Z2", rating: 4.1, status: "Blocked" }
+    ];
+
+    function saveVendorProfile() {
+      const name = document.getElementById('vm-name').value;
+      const category = document.getElementById('vm-category').value;
+      const gst = document.getElementById('vm-gst').value;
+      const email = document.getElementById('vm-email').value;
+      const ratingVal = document.getElementById('vm-rating').value || "4.5";
+      
+      if (!name || !gst || !email) {
+        alert("Please enter Name, GST, and Email Address.");
+        return;
+      }
+
+      const newSupplier = {
+        name: name,
+        company: name.split(' ')[0] + " Corp",
+        payables: "₹0",
+        email: email,
+        category: category,
+        gst: gst,
+        rating: parseFloat(ratingVal),
+        status: "Active"
+      };
+
+      suppliersDatabase.unshift(newSupplier);
+      
+      // Clear inputs
+      document.getElementById('vm-name').value = '';
+      document.getElementById('vm-gst').value = '';
+      document.getElementById('vm-email').value = '';
+      document.getElementById('vm-rating').value = '';
+
+      closeVendorModal();
+      
+      // Update tables
+      renderDashboardForRole(currentRole);
+      // Rerender active views if they are open
+      updateVendorsMasterTable();
+      alert(`Supplier "${name}" registered successfully inside ERP database!`);
+    }
+
+    function updateVendorsMasterTable() {
+      const tbody = document.querySelector('#screen-vendors-list tbody');
+      if (!tbody) return;
+      
+      tbody.innerHTML = suppliersDatabase.map(sup => `
+        <tr class="border-b border-cyprus/5">
+          <td class="py-3.5 px-4 font-semibold text-cyprus">${sup.name}</td>
+          <td class="py-3.5 px-4">${sup.category}</td>
+          <td class="py-3.5 px-4 text-darkText/60 font-mono">${sup.gst}</td>
+          <td class="py-3.5 px-4 text-green-700 font-bold">95%</td>
+          <td class="py-3.5 px-4 text-yellow-500 font-bold"><i class="fas fa-star mr-1"></i> ${sup.rating}</td>
+          <td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded ${sup.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'} font-semibold text-[10px]">${sup.status}</span></td>
+        </tr>
+      `).join('');
+    }
+
+    // CSV Download Functionality
+    function downloadCSV() {
+      const csvContent = "data:text/csv;charset=utf-8,Month,Spend (INR)\nJan,120000\nFeb,150000\nMar,80000\nApr,220000\nMay,190000\nJun,324000\n";
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "procurement_spend_report.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Document switcher variables & logic
+    const poDocHTML = `
+              <!-- Confirmed Watermark -->
+              <div class="absolute top-12 right-12 border-4 border-green-600 text-green-600 font-bold text-xl uppercase tracking-widest px-4 py-2 rotate-12 rounded opacity-80 animate-fade-in">
+                Approved
+              </div>
+              <div class="flex justify-between border-b border-cyprus/10 pb-6 mb-6">
+                <div>
+                  <h3 class="text-base font-bold text-cyprus uppercase">Acme Corporation</h3>
+                  <p class="text-darkText/60">Plot 45, Sector 18, Udyog Vihar</p>
+                  <p class="text-darkText/60">Gurugram, Haryana - 122015</p>
+                  <p class="text-darkText/60">GSTIN: 06ACMCA1234E2Z9</p>
+                </div>
+                <div class="text-right">
+                  <h3 class="text-sm font-bold text-cyprus">PURCHASE ORDER</h3>
+                  <p class="text-xs font-bold text-coral mt-1">PO-2026-0003</p>
+                  <p class="text-darkText/60 mt-1">Date: June 6, 2026</p>
+                  <p class="text-darkText/60">Status: <span class="font-bold text-green-700 uppercase">Approved</span></p>
+                </div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 text-xs">
+                <div>
+                  <h4 class="font-bold text-cyprus uppercase mb-1">Vendor Details</h4>
+                  <p class="font-semibold text-darkText">Delhi Hardware Hub</p>
+                  <p class="text-darkText/60">22, G.B. Road, Hardware Market</p>
+                  <p class="text-darkText/60">Delhi - 110006</p>
+                  <p class="text-darkText/60">GSTIN: 07AAAAD1234F1Z1</p>
+                </div>
+                <div>
+                  <h4 class="font-bold text-cyprus uppercase mb-1">Ship To</h4>
+                  <p class="font-semibold text-darkText">Acme Corp warehouse</p>
+                  <p class="text-darkText/60">Plot 12, Logistics Park</p>
+                  <p class="text-darkText/60">Faridabad, Haryana</p>
+                </div>
+              </div>
+              <table class="w-full text-left border-collapse mb-6 text-[11px]">
+                <thead>
+                  <tr class="bg-sand/30 text-cyprus font-semibold border-b border-cyprus/10">
+                    <th class="py-2.5 px-3">Item Description</th>
+                    <th class="py-2.5 px-3 text-right">Qty</th>
+                    <th class="py-2.5 px-3 text-right">Unit Price</th>
+                    <th class="py-2.5 px-3 text-right">Amount (₹)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border-b border-cyprus/5">
+                    <td class="py-3 px-3">Dell Latitude 3440 Laptop</td>
+                    <td class="py-3 px-3 text-right">50</td>
+                    <td class="py-3 px-3 text-right">₹42,000.00</td>
+                    <td class="py-3 px-3 text-right">₹21,00,000.00</td>
+                  </tr>
+                  <tr class="border-b border-cyprus/5">
+                    <td class="py-3 px-3">Ergonomic Standing Office Desk</td>
+                    <td class="py-3 px-3 text-right">10</td>
+                    <td class="py-3 px-3 text-right">₹15,000.00</td>
+                    <td class="py-3 px-3 text-right">₹1,50,000.00</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="flex justify-end text-xs">
+                <div class="w-64 flex flex-col gap-2">
+                  <div class="flex justify-between text-darkText/70">
+                    <span>Subtotal:</span>
+                    <span>₹22,50,000.00</span>
+                  </div>
+                  <div class="flex justify-between text-darkText/70">
+                    <span>IGST (18%):</span>
+                    <span>₹4,05,000.00</span>
+                  </div>
+                  <div class="flex justify-between border-t border-cyprus/10 pt-2 font-bold text-cyprus text-sm">
+                    <span>Grand Total:</span>
+                    <span>₹26,55,000.00</span>
+                  </div>
+                </div>
+              </div>
+    `;
+
+    const invoiceDocHTML = `
+              <!-- Paid Watermark -->
+              <div class="absolute top-12 right-12 border-4 border-blue-600 text-blue-600 font-bold text-xl uppercase tracking-widest px-4 py-2 rotate-12 rounded opacity-80 animate-fade-in animate-pulse">
+                Invoice Generated
+              </div>
+              <div class="flex justify-between border-b border-cyprus/10 pb-6 mb-6">
+                <div>
+                  <h3 class="text-base font-bold text-cyprus uppercase">Delhi Hardware Hub</h3>
+                  <p class="text-darkText/60">22, G.B. Road, Hardware Market</p>
+                  <p class="text-darkText/60">Delhi - 110006</p>
+                  <p class="text-darkText/60">GSTIN: 07AAAAD1234F1Z1</p>
+                </div>
+                <div class="text-right">
+                  <h3 class="text-sm font-bold text-cyprus">TAX INVOICE</h3>
+                  <p class="text-xs font-bold text-coral mt-1">INV-2026-0003</p>
+                  <p class="text-darkText/60 mt-1">Date: June 6, 2026</p>
+                  <p class="text-darkText/60">PO Ref: <span class="font-semibold text-cyprus">PO-2026-0003</span></p>
+                </div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 text-xs">
+                <div>
+                  <h4 class="font-bold text-cyprus uppercase mb-1">Bill To</h4>
+                  <p class="font-semibold text-darkText">Acme Corporation</p>
+                  <p class="text-darkText/60">Plot 45, Sector 18, Udyog Vihar</p>
+                  <p class="text-darkText/60">Gurugram, Haryana - 122015</p>
+                  <p class="text-darkText/60">GSTIN: 06ACMCA1234E2Z9</p>
+                </div>
+                <div>
+                  <h4 class="font-bold text-cyprus uppercase mb-1">Dispatch Shipping</h4>
+                  <p class="font-semibold text-darkText">Acme Corp warehouse</p>
+                  <p class="text-darkText/60">Plot 12, Logistics Park</p>
+                  <p class="text-darkText/60">Faridabad, Haryana</p>
+                </div>
+              </div>
+              <table class="w-full text-left border-collapse mb-6 text-[11px]">
+                <thead>
+                  <tr class="bg-sand/30 text-cyprus font-semibold border-b border-cyprus/10">
+                    <th class="py-2.5 px-3">Item Description</th>
+                    <th class="py-2.5 px-3 text-right">Qty</th>
+                    <th class="py-2.5 px-3 text-right">Unit Price</th>
+                    <th class="py-2.5 px-3 text-right">Amount (₹)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border-b border-cyprus/5">
+                    <td class="py-3 px-3">Dell Latitude 3440 Laptop</td>
+                    <td class="py-3 px-3 text-right">50</td>
+                    <td class="py-3 px-3 text-right">₹42,000.00</td>
+                    <td class="py-3 px-3 text-right">₹21,00,000.00</td>
+                  </tr>
+                  <tr class="border-b border-cyprus/5">
+                    <td class="py-3 px-3">Ergonomic Standing Office Desk</td>
+                    <td class="py-3 px-3 text-right">10</td>
+                    <td class="py-3 px-3 text-right">₹15,000.00</td>
+                    <td class="py-3 px-3 text-right">₹1,50,000.00</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="flex justify-end text-xs">
+                <div class="w-64 flex flex-col gap-2">
+                  <div class="flex justify-between text-darkText/70">
+                    <span>Subtotal:</span>
+                    <span>₹22,50,000.00</span>
+                  </div>
+                  <div class="flex justify-between text-darkText/70">
+                    <span>IGST (18%):</span>
+                    <span>₹4,05,000.00</span>
+                  </div>
+                  <div class="flex justify-between border-t border-cyprus/10 pt-2 font-bold text-cyprus text-sm">
+                    <span>Invoice Total:</span>
+                    <span>₹26,55,000.00</span>
+                  </div>
+                </div>
+              </div>
+    `;
+
+    let activeDocPreview = 'po';
+
+    function toggleDocPreview(docType) {
+      activeDocPreview = docType;
+      const bodyEl = document.getElementById('po-invoice-document-body');
+      const poBtn = document.getElementById('btn-doc-po');
+      const invoiceBtn = document.getElementById('btn-doc-invoice');
+      
+      if (!bodyEl) return;
+
+      if (docType === 'po') {
+        poBtn.className = "flex-1 py-1 text-xs font-bold rounded-lg bg-white text-cyprus shadow-sm transition-all";
+        invoiceBtn.className = "flex-1 py-1 text-xs font-semibold rounded-lg text-cyprus/60 hover:bg-white/40 transition-all";
+        bodyEl.innerHTML = poDocHTML;
+      } else {
+        invoiceBtn.className = "flex-1 py-1 text-xs font-bold rounded-lg bg-white text-cyprus shadow-sm transition-all";
+        poBtn.className = "flex-1 py-1 text-xs font-semibold rounded-lg text-cyprus/60 hover:bg-white/40 transition-all";
+        bodyEl.innerHTML = invoiceDocHTML;
+      }
+    }
+
+    function printCurrentDocument() {
+      window.print();
+    }
+
+    function sortComparison(criteria) {
+      const tableContainer = document.getElementById('comparison-table-container');
+      const sortStatus = document.getElementById('comparison-sort-status');
+      if (!tableContainer || !sortStatus) return;
+
+      // Update buttons active styles
+      document.getElementById('btn-sort-default').className = "px-3 py-1 bg-white hover:bg-sand rounded border border-cyprus/10 font-semibold transition-all";
+      document.getElementById('btn-sort-price').className = "px-3 py-1 bg-white hover:bg-sand rounded border border-cyprus/10 font-semibold transition-all";
+      document.getElementById('btn-sort-delivery').className = "px-3 py-1 bg-white hover:bg-sand rounded border border-cyprus/10 font-semibold transition-all";
+      
+      if (criteria === 'default') {
+        document.getElementById('btn-sort-default').className = "px-3 py-1 bg-cyprus text-sand rounded font-semibold transition-all border border-cyprus";
+        sortStatus.innerText = "Default ranking: AI Recommended order.";
+        tableContainer.innerHTML = `
+            <div class="overflow-x-auto custom-scrollbar">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr class="bg-sand/30 text-cyprus font-semibold border-b border-cyprus/10">
+                    <th class="py-3.5 px-4 w-64">Item Specifications</th>
+                    <th class="py-3.5 px-4 w-20 text-center">Qty</th>
+                    <th class="py-3.5 px-4 bg-cyprus/5 text-cyprus font-bold">Delhi Hardware (Recommended)</th>
+                    <th class="py-3.5 px-4">TechSolutions India</th>
+                    <th class="py-3.5 px-4">Global Furniture Hub</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border-b border-cyprus/5">
+                    <td class="py-4 px-4 font-medium text-cyprus">Dell Latitude 3440 Laptop</td>
+                    <td class="py-4 px-4 text-center">50</td>
+                    <td class="py-4 px-4 bg-green-50 text-green-700 font-bold border-x border-green-200">
+                      ₹42,000.00 <span class="block text-[10px] font-normal text-darkText/50">Total: ₹21,00,000</span>
+                    </td>
+                    <td class="py-4 px-4 text-darkText/70">
+                      ₹44,500.00 <span class="block text-[10px] text-darkText/50">Total: ₹22,25,000</span>
+                    </td>
+                    <td class="py-4 px-4 text-darkText/40 italic">
+                      No Quote <span class="block text-[10px]">--</span>
+                    </td>
+                  </tr>
+                  <tr class="border-b border-cyprus/5">
+                    <td class="py-4 px-4 font-medium text-cyprus">Ergonomic Standing Office Desk</td>
+                    <td class="py-4 px-4 text-center">10</td>
+                    <td class="py-4 px-4 bg-cyprus/5 text-darkText/70 border-x border-cyprus/5">
+                      ₹15,000.00 <span class="block text-[10px] text-darkText/50">Total: ₹1,50,000</span>
+                    </td>
+                    <td class="py-4 px-4 text-darkText/70">
+                      ₹16,200.00 <span class="block text-[10px] text-darkText/50">Total: ₹1,62,000</span>
+                    </td>
+                    <td class="py-4 px-4 bg-green-50 text-green-700 font-bold border-x border-green-200">
+                      ₹13,800.00 <span class="block text-[10px] font-normal text-darkText/50">Total: ₹1,38,000</span>
+                    </td>
+                  </tr>
+                  <tr class="bg-sand/20 font-bold text-cyprus">
+                    <td class="py-4 px-4">Summary Summary</td>
+                    <td class="py-4 px-4"></td>
+                    <td class="py-4 px-4 bg-cyprus/10 border-x border-cyprus/10 text-cyprus">
+                      Total: ₹22,50,000
+                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 5 Days | 4.8★</span>
+                    </td>
+                    <td class="py-4 px-4">
+                      Total: ₹23,87,000
+                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 8 Days | 4.2★</span>
+                    </td>
+                    <td class="py-4 px-4">
+                      Total: ₹1,38,000 (Partial)
+                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 12 Days | 3.9★</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        `;
+      } else if (criteria === 'price') {
+        document.getElementById('btn-sort-price').className = "px-3 py-1 bg-cyprus text-sand rounded font-semibold transition-all border border-cyprus";
+        sortStatus.innerText = "Sorted by Total Contract Price: lowest first.";
+        tableContainer.innerHTML = `
+            <div class="overflow-x-auto custom-scrollbar">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr class="bg-sand/30 text-cyprus font-semibold border-b border-cyprus/10">
+                    <th class="py-3.5 px-4 w-64">Item Specifications</th>
+                    <th class="py-3.5 px-4 w-20 text-center">Qty</th>
+                    <th class="py-3.5 px-4">Global Furniture Hub</th>
+                    <th class="py-3.5 px-4 bg-cyprus/5 text-cyprus font-bold">Delhi Hardware (Recommended)</th>
+                    <th class="py-3.5 px-4">TechSolutions India</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border-b border-cyprus/5">
+                    <td class="py-4 px-4 font-medium text-cyprus">Dell Latitude 3440 Laptop</td>
+                    <td class="py-4 px-4 text-center">50</td>
+                    <td class="py-4 px-4 text-darkText/40 italic">
+                      No Quote <span class="block text-[10px]">--</span>
+                    </td>
+                    <td class="py-4 px-4 bg-green-50 text-green-700 font-bold border-x border-green-200">
+                      ₹42,000.00 <span class="block text-[10px] font-normal text-darkText/50">Total: ₹21,00,000</span>
+                    </td>
+                    <td class="py-4 px-4 text-darkText/70">
+                      ₹44,500.00 <span class="block text-[10px] text-darkText/50">Total: ₹22,25,000</span>
+                    </td>
+                  </tr>
+                  <tr class="border-b border-cyprus/5">
+                    <td class="py-4 px-4 font-medium text-cyprus">Ergonomic Standing Office Desk</td>
+                    <td class="py-4 px-4 text-center">10</td>
+                    <td class="py-4 px-4 bg-green-50 text-green-700 font-bold border-x border-green-200">
+                      ₹13,800.00 <span class="block text-[10px] font-normal text-darkText/50">Total: ₹1,38,000</span>
+                    </td>
+                    <td class="py-4 px-4 bg-cyprus/5 text-darkText/70 border-x border-cyprus/5">
+                      ₹15,000.00 <span class="block text-[10px] text-darkText/50">Total: ₹1,50,000</span>
+                    </td>
+                    <td class="py-4 px-4 text-darkText/70">
+                      ₹16,200.00 <span class="block text-[10px] text-darkText/50">Total: ₹1,62,000</span>
+                    </td>
+                  </tr>
+                  <tr class="bg-sand/20 font-bold text-cyprus">
+                    <td class="py-4 px-4">Summary Summary</td>
+                    <td class="py-4 px-4"></td>
+                    <td class="py-4 px-4">
+                      Total: ₹1,38,000 (Partial)
+                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 12 Days | 3.9★</span>
+                    </td>
+                    <td class="py-4 px-4 bg-cyprus/10 border-x border-cyprus/10 text-cyprus">
+                      Total: ₹22,50,000
+                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 5 Days | 4.8★</span>
+                    </td>
+                    <td class="py-4 px-4">
+                      Total: ₹23,87,000
+                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 8 Days | 4.2★</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        `;
+      } else if (criteria === 'delivery') {
+        document.getElementById('btn-sort-delivery').className = "px-3 py-1 bg-cyprus text-sand rounded font-semibold transition-all border border-cyprus";
+        sortStatus.innerText = "Sorted by Delivery Timeline: fastest first.";
+        tableContainer.innerHTML = `
+            <div class="overflow-x-auto custom-scrollbar">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr class="bg-sand/30 text-cyprus font-semibold border-b border-cyprus/10">
+                    <th class="py-3.5 px-4 w-64">Item Specifications</th>
+                    <th class="py-3.5 px-4 w-20 text-center">Qty</th>
+                    <th class="py-3.5 px-4 bg-cyprus/5 text-cyprus font-bold">Delhi Hardware (Recommended)</th>
+                    <th class="py-3.5 px-4">TechSolutions India</th>
+                    <th class="py-3.5 px-4">Global Furniture Hub</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border-b border-cyprus/5">
+                    <td class="py-4 px-4 font-medium text-cyprus">Dell Latitude 3440 Laptop</td>
+                    <td class="py-4 px-4 text-center">50</td>
+                    <td class="py-4 px-4 bg-green-50 text-green-700 font-bold border-x border-green-200">
+                      ₹42,000.00 <span class="block text-[10px] font-normal text-darkText/50">Total: ₹21,00,000</span>
+                    </td>
+                    <td class="py-4 px-4 text-darkText/70">
+                      ₹44,500.00 <span class="block text-[10px] text-darkText/50">Total: ₹22,25,000</span>
+                    </td>
+                    <td class="py-4 px-4 text-darkText/40 italic">
+                      No Quote <span class="block text-[10px]">--</span>
+                    </td>
+                  </tr>
+                  <tr class="border-b border-cyprus/5">
+                    <td class="py-4 px-4 font-medium text-cyprus">Ergonomic Standing Office Desk</td>
+                    <td class="py-4 px-4 text-center">10</td>
+                    <td class="py-4 px-4 bg-cyprus/5 text-darkText/70 border-x border-cyprus/5">
+                      ₹15,000.00 <span class="block text-[10px] text-darkText/50">Total: ₹1,50,000</span>
+                    </td>
+                    <td class="py-4 px-4 text-darkText/70">
+                      ₹16,200.00 <span class="block text-[10px] text-darkText/50">Total: ₹1,62,000</span>
+                    </td>
+                    <td class="py-4 px-4 bg-green-50 text-green-700 font-bold border-x border-green-200">
+                      ₹13,800.00 <span class="block text-[10px] font-normal text-darkText/50">Total: ₹1,38,000</span>
+                    </td>
+                  </tr>
+                  <tr class="bg-sand/20 font-bold text-cyprus">
+                    <td class="py-4 px-4">Summary Summary</td>
+                    <td class="py-4 px-4"></td>
+                    <td class="py-4 px-4 bg-cyprus/10 border-x border-cyprus/10 text-cyprus">
+                      Total: ₹22,50,000
+                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 5 Days | 4.8★</span>
+                    </td>
+                    <td class="py-4 px-4">
+                      Total: ₹23,87,000
+                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 8 Days | 4.2★</span>
+                    </td>
+                    <td class="py-4 px-4">
+                      Total: ₹1,38,000 (Partial)
+                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 12 Days | 3.9★</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        `;
+      }
+    }
+
+      // Initialize the document contents on load
+      poDocHTML = document.getElementById('po-invoice-document-body') ? document.getElementById('po-invoice-document-body').innerHTML : poDocHTML;
+
+      // Render standard data on load
+      updateVendorsMasterTable();
+      initCharts();
+    }
+
     // Voice to RFQ integration
     function toggleVoiceRecognition() {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -1935,7 +2587,17 @@
 
     // Invoice actions
     function generateInvoice() {
-      alert("Invoice generated in Accounting!\nVendor bill created with 18% GST (₹4,05,000.00). status: Sent for Payment.");
+      alert("Invoice generated in Accounting!\nVendor bill created with 18% GST (₹4,05,000.00). Status: Sent for Payment.");
+      
+      // Unlock the invoice tab button in UI
+      const invoiceBtn = document.getElementById('btn-doc-invoice');
+      if (invoiceBtn) {
+        invoiceBtn.removeAttribute('disabled');
+        invoiceBtn.classList.remove('cursor-not-allowed', 'opacity-50');
+        invoiceBtn.classList.add('text-cyprus');
+      }
+      
+      toggleDocPreview('invoice');
     }
 
     function sendInvoiceEmail() {
@@ -2104,6 +2766,527 @@
           }
         }
       });
+    }
+
+    // --- Dynamic ERP Prototype Additional Logic (Checklist Compliance) ---
+
+    // Toggle tabs in Login screen
+    function toggleLoginTab(tab) {
+      const loginArea = document.getElementById('login-form-area');
+      const regArea = document.getElementById('register-form-area');
+      const loginBtn = document.getElementById('btn-tab-login');
+      const regBtn = document.getElementById('btn-tab-register');
+
+      if (!loginArea || !regArea || !loginBtn || !regBtn) return;
+
+      if (tab === 'login') {
+        loginArea.classList.remove('hidden');
+        regArea.classList.add('hidden');
+        loginBtn.className = "flex-1 py-1.5 text-xs font-bold rounded-lg bg-white text-cyprus shadow-sm transition-all";
+        regBtn.className = "flex-1 py-1.5 text-xs font-semibold rounded-lg text-cyprus/75 hover:bg-white/40 transition-all";
+      } else {
+        loginArea.classList.add('hidden');
+        regArea.classList.remove('hidden');
+        regBtn.className = "flex-1 py-1.5 text-xs font-bold rounded-lg bg-white text-cyprus shadow-sm transition-all";
+        loginBtn.className = "flex-1 py-1.5 text-xs font-semibold rounded-lg text-cyprus/75 hover:bg-white/40 transition-all";
+      }
+    }
+
+    // Login process
+    function loginUser() {
+      const email = document.getElementById('login-email').value;
+      const role = document.getElementById('login-role').value;
+      if (!email) {
+        alert("Please enter a valid email.");
+        return;
+      }
+      
+      const loginScreen = document.getElementById('screen-login');
+      if (loginScreen) {
+        switchRole(role);
+        loginScreen.classList.add('hidden');
+      }
+    }
+
+    // Logout
+    function logoutUser() {
+      const loginScreen = document.getElementById('screen-login');
+      if (loginScreen) {
+        loginScreen.classList.remove('hidden');
+      }
+    }
+
+    // Vendor Modal actions
+    function openVendorModal() {
+      const modal = document.getElementById('vendor-modal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeVendorModal() {
+      const modal = document.getElementById('vendor-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    // Dynamic suppliers database
+    let suppliersDatabase = [
+      { name: "Tahsan Khan", company: "Uistore.org", payables: "$635", email: "tahsankhan380@gmail.com", category: "IT Hardware", gst: "07AAAAD1234F1Z1", rating: 4.8, status: "Active" },
+      { name: "Anwar Hussen", company: "Uistore.org", payables: "$748", email: "anwarhussen247@gmail.com", category: "IT Hardware", gst: "09BBBBD5678K2Z5", rating: 4.2, status: "Active" },
+      { name: "Hasan Khan", company: "Uistore.org", payables: "$759", email: "hasankhan325@gmail.com", category: "Furniture", gst: "08CCCCD9101M3Z0", rating: 3.9, status: "Active" },
+      { name: "Jaman Khan", company: "Uistore.org", payables: "$829", email: "jamankhan435@gmail.com", category: "Logistics", gst: "07DDDDD2345N4Z8", rating: 4.6, status: "Active" },
+      { name: "Herry Brooks", company: "Uistore.org", payables: "$213", email: "herrybrooks234@gmail.com", category: "Stationery", gst: "07EEEEE3456P5Z2", rating: 4.1, status: "Blocked" }
+    ];
+
+    function saveVendorProfile() {
+      const name = document.getElementById('vm-name').value;
+      const category = document.getElementById('vm-category').value;
+      const gst = document.getElementById('vm-gst').value;
+      const email = document.getElementById('vm-email').value;
+      const ratingVal = document.getElementById('vm-rating').value || "4.5";
+      
+      if (!name || !gst || !email) {
+        alert("Please enter Name, GST, and Email Address.");
+        return;
+      }
+
+      const newSupplier = {
+        name: name,
+        company: name.split(' ')[0] + " Corp",
+        payables: "₹0",
+        email: email,
+        category: category,
+        gst: gst,
+        rating: parseFloat(ratingVal),
+        status: "Active"
+      };
+
+      suppliersDatabase.unshift(newSupplier);
+      
+      // Clear inputs
+      document.getElementById('vm-name').value = '';
+      document.getElementById('vm-gst').value = '';
+      document.getElementById('vm-email').value = '';
+      document.getElementById('vm-rating').value = '';
+
+      closeVendorModal();
+      
+      // Update tables
+      renderDashboardForRole(currentRole);
+      // Rerender active views if they are open
+      updateVendorsMasterTable();
+      alert(`Supplier "${name}" registered successfully inside ERP database!`);
+    }
+
+    function updateVendorsMasterTable() {
+      const tbody = document.querySelector('#screen-vendors-list tbody');
+      if (!tbody) return;
+      
+      tbody.innerHTML = suppliersDatabase.map(sup => `
+        <tr class="border-b border-cyprus/5">
+          <td class="py-3.5 px-4 font-semibold text-cyprus">${sup.name}</td>
+          <td class="py-3.5 px-4">${sup.category}</td>
+          <td class="py-3.5 px-4 text-darkText/60 font-mono">${sup.gst}</td>
+          <td class="py-3.5 px-4 text-green-700 font-bold">95%</td>
+          <td class="py-3.5 px-4 text-yellow-500 font-bold"><i class="fas fa-star mr-1"></i> ${sup.rating}</td>
+          <td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded ${sup.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'} font-semibold text-[10px]">${sup.status}</span></td>
+        </tr>
+      `).join('');
+    }
+
+    // CSV Download Functionality
+    function downloadCSV() {
+      const csvContent = "data:text/csv;charset=utf-8,Month,Spend (INR)\nJan,120000\nFeb,150000\nMar,80000\nApr,220000\nMay,190000\nJun,324000\n";
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "procurement_spend_report.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Document switcher variables & logic
+    const poDocHTML = `
+              <!-- Confirmed Watermark -->
+              <div class="absolute top-12 right-12 border-4 border-green-600 text-green-600 font-bold text-xl uppercase tracking-widest px-4 py-2 rotate-12 rounded opacity-80 animate-fade-in">
+                Approved
+              </div>
+              <div class="flex justify-between border-b border-cyprus/10 pb-6 mb-6">
+                <div>
+                  <h3 class="text-base font-bold text-cyprus uppercase">Acme Corporation</h3>
+                  <p class="text-darkText/60">Plot 45, Sector 18, Udyog Vihar</p>
+                  <p class="text-darkText/60">Gurugram, Haryana - 122015</p>
+                  <p class="text-darkText/60">GSTIN: 06ACMCA1234E2Z9</p>
+                </div>
+                <div class="text-right">
+                  <h3 class="text-sm font-bold text-cyprus">PURCHASE ORDER</h3>
+                  <p class="text-xs font-bold text-coral mt-1">PO-2026-0003</p>
+                  <p class="text-darkText/60 mt-1">Date: June 6, 2026</p>
+                  <p class="text-darkText/60">Status: <span class="font-bold text-green-700 uppercase">Approved</span></p>
+                </div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 text-xs">
+                <div>
+                  <h4 class="font-bold text-cyprus uppercase mb-1">Vendor Details</h4>
+                  <p class="font-semibold text-darkText">Delhi Hardware Hub</p>
+                  <p class="text-darkText/60">22, G.B. Road, Hardware Market</p>
+                  <p class="text-darkText/60">Delhi - 110006</p>
+                  <p class="text-darkText/60">GSTIN: 07AAAAD1234F1Z1</p>
+                </div>
+                <div>
+                  <h4 class="font-bold text-cyprus uppercase mb-1">Ship To</h4>
+                  <p class="font-semibold text-darkText">Acme Corp warehouse</p>
+                  <p class="text-darkText/60">Plot 12, Logistics Park</p>
+                  <p class="text-darkText/60">Faridabad, Haryana</p>
+                </div>
+              </div>
+              <table class="w-full text-left border-collapse mb-6 text-[11px]">
+                <thead>
+                  <tr class="bg-sand/30 text-cyprus font-semibold border-b border-cyprus/10">
+                    <th class="py-2.5 px-3">Item Description</th>
+                    <th class="py-2.5 px-3 text-right">Qty</th>
+                    <th class="py-2.5 px-3 text-right">Unit Price</th>
+                    <th class="py-2.5 px-3 text-right">Amount (₹)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border-b border-cyprus/5">
+                    <td class="py-3 px-3">Dell Latitude 3440 Laptop</td>
+                    <td class="py-3 px-3 text-right">50</td>
+                    <td class="py-3 px-3 text-right">₹42,000.00</td>
+                    <td class="py-3 px-3 text-right">₹21,00,000.00</td>
+                  </tr>
+                  <tr class="border-b border-cyprus/5">
+                    <td class="py-3 px-3">Ergonomic Standing Office Desk</td>
+                    <td class="py-3 px-3 text-right">10</td>
+                    <td class="py-3 px-3 text-right">₹15,000.00</td>
+                    <td class="py-3 px-3 text-right">₹1,50,000.00</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="flex justify-end text-xs">
+                <div class="w-64 flex flex-col gap-2">
+                  <div class="flex justify-between text-darkText/70">
+                    <span>Subtotal:</span>
+                    <span>₹22,50,000.00</span>
+                  </div>
+                  <div class="flex justify-between text-darkText/70">
+                    <span>IGST (18%):</span>
+                    <span>₹4,05,000.00</span>
+                  </div>
+                  <div class="flex justify-between border-t border-cyprus/10 pt-2 font-bold text-cyprus text-sm">
+                    <span>Grand Total:</span>
+                    <span>₹26,55,000.00</span>
+                  </div>
+                </div>
+              </div>
+    `;
+
+    const invoiceDocHTML = `
+              <!-- Paid Watermark -->
+              <div class="absolute top-12 right-12 border-4 border-blue-600 text-blue-600 font-bold text-xl uppercase tracking-widest px-4 py-2 rotate-12 rounded opacity-80 animate-fade-in animate-pulse">
+                Invoice Generated
+              </div>
+              <div class="flex justify-between border-b border-cyprus/10 pb-6 mb-6">
+                <div>
+                  <h3 class="text-base font-bold text-cyprus uppercase">Delhi Hardware Hub</h3>
+                  <p class="text-darkText/60">22, G.B. Road, Hardware Market</p>
+                  <p class="text-darkText/60">Delhi - 110006</p>
+                  <p class="text-darkText/60">GSTIN: 07AAAAD1234F1Z1</p>
+                </div>
+                <div class="text-right">
+                  <h3 class="text-sm font-bold text-cyprus">TAX INVOICE</h3>
+                  <p class="text-xs font-bold text-coral mt-1">INV-2026-0003</p>
+                  <p class="text-darkText/60 mt-1">Date: June 6, 2026</p>
+                  <p class="text-darkText/60">PO Ref: <span class="font-semibold text-cyprus">PO-2026-0003</span></p>
+                </div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 text-xs">
+                <div>
+                  <h4 class="font-bold text-cyprus uppercase mb-1">Bill To</h4>
+                  <p class="font-semibold text-darkText">Acme Corporation</p>
+                  <p class="text-darkText/60">Plot 45, Sector 18, Udyog Vihar</p>
+                  <p class="text-darkText/60">Gurugram, Haryana - 122015</p>
+                  <p class="text-darkText/60">GSTIN: 06ACMCA1234E2Z9</p>
+                </div>
+                <div>
+                  <h4 class="font-bold text-cyprus uppercase mb-1">Dispatch Shipping</h4>
+                  <p class="font-semibold text-darkText">Acme Corp warehouse</p>
+                  <p class="text-darkText/60">Plot 12, Logistics Park</p>
+                  <p class="text-darkText/60">Faridabad, Haryana</p>
+                </div>
+              </div>
+              <table class="w-full text-left border-collapse mb-6 text-[11px]">
+                <thead>
+                  <tr class="bg-sand/30 text-cyprus font-semibold border-b border-cyprus/10">
+                    <th class="py-2.5 px-3">Item Description</th>
+                    <th class="py-2.5 px-3 text-right">Qty</th>
+                    <th class="py-2.5 px-3 text-right">Unit Price</th>
+                    <th class="py-2.5 px-3 text-right">Amount (₹)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border-b border-cyprus/5">
+                    <td class="py-3 px-3">Dell Latitude 3440 Laptop</td>
+                    <td class="py-3 px-3 text-right">50</td>
+                    <td class="py-3 px-3 text-right">₹42,000.00</td>
+                    <td class="py-3 px-3 text-right">₹21,00,000.00</td>
+                  </tr>
+                  <tr class="border-b border-cyprus/5">
+                    <td class="py-3 px-3">Ergonomic Standing Office Desk</td>
+                    <td class="py-3 px-3 text-right">10</td>
+                    <td class="py-3 px-3 text-right">₹15,000.00</td>
+                    <td class="py-3 px-3 text-right">₹1,50,000.00</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="flex justify-end text-xs">
+                <div class="w-64 flex flex-col gap-2">
+                  <div class="flex justify-between text-darkText/70">
+                    <span>Subtotal:</span>
+                    <span>₹22,50,000.00</span>
+                  </div>
+                  <div class="flex justify-between text-darkText/70">
+                    <span>IGST (18%):</span>
+                    <span>₹4,05,000.00</span>
+                  </div>
+                  <div class="flex justify-between border-t border-cyprus/10 pt-2 font-bold text-cyprus text-sm">
+                    <span>Invoice Total:</span>
+                    <span>₹26,55,000.00</span>
+                  </div>
+                </div>
+              </div>
+    `;
+
+    let activeDocPreview = 'po';
+
+    function toggleDocPreview(docType) {
+      activeDocPreview = docType;
+      const bodyEl = document.getElementById('po-invoice-document-body');
+      const poBtn = document.getElementById('btn-doc-po');
+      const invoiceBtn = document.getElementById('btn-doc-invoice');
+      
+      if (!bodyEl) return;
+
+      if (docType === 'po') {
+        poBtn.className = "flex-1 py-1 text-xs font-bold rounded-lg bg-white text-cyprus shadow-sm transition-all";
+        invoiceBtn.className = "flex-1 py-1 text-xs font-semibold rounded-lg text-cyprus/60 hover:bg-white/40 transition-all";
+        bodyEl.innerHTML = poDocHTML;
+      } else {
+        invoiceBtn.className = "flex-1 py-1 text-xs font-bold rounded-lg bg-white text-cyprus shadow-sm transition-all";
+        poBtn.className = "flex-1 py-1 text-xs font-semibold rounded-lg text-cyprus/60 hover:bg-white/40 transition-all";
+        bodyEl.innerHTML = invoiceDocHTML;
+      }
+    }
+
+    function printCurrentDocument() {
+      window.print();
+    }
+
+    function sortComparison(criteria) {
+      const tableContainer = document.getElementById('comparison-table-container');
+      const sortStatus = document.getElementById('comparison-sort-status');
+      if (!tableContainer || !sortStatus) return;
+
+      // Update buttons active styles
+      document.getElementById('btn-sort-default').className = "px-3 py-1 bg-white hover:bg-sand rounded border border-cyprus/10 font-semibold transition-all";
+      document.getElementById('btn-sort-price').className = "px-3 py-1 bg-white hover:bg-sand rounded border border-cyprus/10 font-semibold transition-all";
+      document.getElementById('btn-sort-delivery').className = "px-3 py-1 bg-white hover:bg-sand rounded border border-cyprus/10 font-semibold transition-all";
+      
+      if (criteria === 'default') {
+        document.getElementById('btn-sort-default').className = "px-3 py-1 bg-cyprus text-sand rounded font-semibold transition-all border border-cyprus";
+        sortStatus.innerText = "Default ranking: AI Recommended order.";
+        tableContainer.innerHTML = `
+            <div class="overflow-x-auto custom-scrollbar">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr class="bg-sand/30 text-cyprus font-semibold border-b border-cyprus/10">
+                    <th class="py-3.5 px-4 w-64">Item Specifications</th>
+                    <th class="py-3.5 px-4 w-20 text-center">Qty</th>
+                    <th class="py-3.5 px-4 bg-cyprus/5 text-cyprus font-bold">Delhi Hardware (Recommended)</th>
+                    <th class="py-3.5 px-4">TechSolutions India</th>
+                    <th class="py-3.5 px-4">Global Furniture Hub</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border-b border-cyprus/5">
+                    <td class="py-4 px-4 font-medium text-cyprus">Dell Latitude 3440 Laptop</td>
+                    <td class="py-4 px-4 text-center">50</td>
+                    <td class="py-4 px-4 bg-green-50 text-green-700 font-bold border-x border-green-200">
+                      ₹42,000.00 <span class="block text-[10px] font-normal text-darkText/50">Total: ₹21,00,000</span>
+                    </td>
+                    <td class="py-4 px-4 text-darkText/70">
+                      ₹44,500.00 <span class="block text-[10px] text-darkText/50">Total: ₹22,25,000</span>
+                    </td>
+                    <td class="py-4 px-4 text-darkText/40 italic">
+                      No Quote <span class="block text-[10px]">--</span>
+                    </td>
+                  </tr>
+                  <tr class="border-b border-cyprus/5">
+                    <td class="py-4 px-4 font-medium text-cyprus">Ergonomic Standing Office Desk</td>
+                    <td class="py-4 px-4 text-center">10</td>
+                    <td class="py-4 px-4 bg-cyprus/5 text-darkText/70 border-x border-cyprus/5">
+                      ₹15,000.00 <span class="block text-[10px] text-darkText/50">Total: ₹1,50,000</span>
+                    </td>
+                    <td class="py-4 px-4 text-darkText/70">
+                      ₹16,200.00 <span class="block text-[10px] text-darkText/50">Total: ₹1,62,000</span>
+                    </td>
+                    <td class="py-4 px-4 bg-green-50 text-green-700 font-bold border-x border-green-200">
+                      ₹13,800.00 <span class="block text-[10px] font-normal text-darkText/50">Total: ₹1,38,000</span>
+                    </td>
+                  </tr>
+                  <tr class="bg-sand/20 font-bold text-cyprus">
+                    <td class="py-4 px-4">Summary Summary</td>
+                    <td class="py-4 px-4"></td>
+                    <td class="py-4 px-4 bg-cyprus/10 border-x border-cyprus/10 text-cyprus">
+                      Total: ₹22,50,000
+                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 5 Days | 4.8★</span>
+                    </td>
+                    <td class="py-4 px-4">
+                      Total: ₹23,87,000
+                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 8 Days | 4.2★</span>
+                    </td>
+                    <td class="py-4 px-4">
+                      Total: ₹1,38,000 (Partial)
+                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 12 Days | 3.9★</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        `;
+      } else if (criteria === 'price') {
+        document.getElementById('btn-sort-price').className = "px-3 py-1 bg-cyprus text-sand rounded font-semibold transition-all border border-cyprus";
+        sortStatus.innerText = "Sorted by Total Contract Price: lowest first.";
+        tableContainer.innerHTML = `
+            <div class="overflow-x-auto custom-scrollbar">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr class="bg-sand/30 text-cyprus font-semibold border-b border-cyprus/10">
+                    <th class="py-3.5 px-4 w-64">Item Specifications</th>
+                    <th class="py-3.5 px-4 w-20 text-center">Qty</th>
+                    <th class="py-3.5 px-4">Global Furniture Hub</th>
+                    <th class="py-3.5 px-4 bg-cyprus/5 text-cyprus font-bold">Delhi Hardware (Recommended)</th>
+                    <th class="py-3.5 px-4">TechSolutions India</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border-b border-cyprus/5">
+                    <td class="py-4 px-4 font-medium text-cyprus">Dell Latitude 3440 Laptop</td>
+                    <td class="py-4 px-4 text-center">50</td>
+                    <td class="py-4 px-4 text-darkText/40 italic">
+                      No Quote <span class="block text-[10px]">--</span>
+                    </td>
+                    <td class="py-4 px-4 bg-green-50 text-green-700 font-bold border-x border-green-200">
+                      ₹42,000.00 <span class="block text-[10px] font-normal text-darkText/50">Total: ₹21,00,000</span>
+                    </td>
+                    <td class="py-4 px-4 text-darkText/70">
+                      ₹44,500.00 <span class="block text-[10px] text-darkText/50">Total: ₹22,25,000</span>
+                    </td>
+                  </tr>
+                  <tr class="border-b border-cyprus/5">
+                    <td class="py-4 px-4 font-medium text-cyprus">Ergonomic Standing Office Desk</td>
+                    <td class="py-4 px-4 text-center">10</td>
+                    <td class="py-4 px-4 bg-green-50 text-green-700 font-bold border-x border-green-200">
+                      ₹13,800.00 <span class="block text-[10px] font-normal text-darkText/50">Total: ₹1,38,000</span>
+                    </td>
+                    <td class="py-4 px-4 bg-cyprus/5 text-darkText/70 border-x border-cyprus/5">
+                      ₹15,000.00 <span class="block text-[10px] text-darkText/50">Total: ₹1,50,000</span>
+                    </td>
+                    <td class="py-4 px-4 text-darkText/70">
+                      ₹16,200.00 <span class="block text-[10px] text-darkText/50">Total: ₹1,62,000</span>
+                    </td>
+                  </tr>
+                  <tr class="bg-sand/20 font-bold text-cyprus">
+                    <td class="py-4 px-4">Summary Summary</td>
+                    <td class="py-4 px-4"></td>
+                    <td class="py-4 px-4">
+                      Total: ₹1,38,000 (Partial)
+                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 12 Days | 3.9★</span>
+                    </td>
+                    <td class="py-4 px-4 bg-cyprus/10 border-x border-cyprus/10 text-cyprus">
+                      Total: ₹22,50,000
+                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 5 Days | 4.8★</span>
+                    </td>
+                    <td class="py-4 px-4">
+                      Total: ₹23,87,000
+                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 8 Days | 4.2★</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        `;
+      } else if (criteria === 'delivery') {
+        document.getElementById('btn-sort-delivery').className = "px-3 py-1 bg-cyprus text-sand rounded font-semibold transition-all border border-cyprus";
+        sortStatus.innerText = "Sorted by Delivery Timeline: fastest first.";
+        tableContainer.innerHTML = `
+            <div class="overflow-x-auto custom-scrollbar">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr class="bg-sand/30 text-cyprus font-semibold border-b border-cyprus/10">
+                    <th class="py-3.5 px-4 w-64">Item Specifications</th>
+                    <th class="py-3.5 px-4 w-20 text-center">Qty</th>
+                    <th class="py-3.5 px-4 bg-cyprus/5 text-cyprus font-bold">Delhi Hardware (Recommended)</th>
+                    <th class="py-3.5 px-4">TechSolutions India</th>
+                    <th class="py-3.5 px-4">Global Furniture Hub</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border-b border-cyprus/5">
+                    <td class="py-4 px-4 font-medium text-cyprus">Dell Latitude 3440 Laptop</td>
+                    <td class="py-4 px-4 text-center">50</td>
+                    <td class="py-4 px-4 bg-green-50 text-green-700 font-bold border-x border-green-200">
+                      ₹42,000.00 <span class="block text-[10px] font-normal text-darkText/50">Total: ₹21,00,000</span>
+                    </td>
+                    <td class="py-4 px-4 text-darkText/70">
+                      ₹44,500.00 <span class="block text-[10px] text-darkText/50">Total: ₹22,25,000</span>
+                    </td>
+                    <td class="py-4 px-4 text-darkText/40 italic">
+                      No Quote <span class="block text-[10px]">--</span>
+                    </td>
+                  </tr>
+                  <tr class="border-b border-cyprus/5">
+                    <td class="py-4 px-4 font-medium text-cyprus">Ergonomic Standing Office Desk</td>
+                    <td class="py-4 px-4 text-center">10</td>
+                    <td class="py-4 px-4 bg-cyprus/5 text-darkText/70 border-x border-cyprus/5">
+                      ₹15,000.00 <span class="block text-[10px] text-darkText/50">Total: ₹1,50,000</span>
+                    </td>
+                    <td class="py-4 px-4 text-darkText/70">
+                      ₹16,200.00 <span class="block text-[10px] text-darkText/50">Total: ₹1,62,000</span>
+                    </td>
+                    <td class="py-4 px-4 bg-green-50 text-green-700 font-bold border-x border-green-200">
+                      ₹13,800.00 <span class="block text-[10px] font-normal text-darkText/50">Total: ₹1,38,000</span>
+                    </td>
+                  </tr>
+                  <tr class="bg-sand/20 font-bold text-cyprus">
+                    <td class="py-4 px-4">Summary Summary</td>
+                    <td class="py-4 px-4"></td>
+                    <td class="py-4 px-4 bg-cyprus/10 border-x border-cyprus/10 text-cyprus">
+                      Total: ₹22,50,000
+                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 5 Days | 4.8★</span>
+                    </td>
+                    <td class="py-4 px-4">
+                      Total: ₹23,87,000
+                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 8 Days | 4.2★</span>
+                    </td>
+                    <td class="py-4 px-4">
+                      Total: ₹1,38,000 (Partial)
+                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 12 Days | 3.9★</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        `;
+      }
+    }
+
+      // Initialize the document contents on load
+      poDocHTML = document.getElementById('po-invoice-document-body') ? document.getElementById('po-invoice-document-body').innerHTML : poDocHTML;
+
+      // Render standard data on load
+      updateVendorsMasterTable();
+      initCharts();
     }
   </script>
 </body>
