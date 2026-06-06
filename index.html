@@ -643,28 +643,50 @@
             <div class="flex flex-col gap-6">
               <div class="bg-white rounded-2xl border border-cyprus/5 shadow-sm p-6 flex flex-col gap-4">
                 <h3 class="text-xs font-bold text-cyprus uppercase">Assign Vendors</h3>
-                <div class="flex flex-col gap-2 max-h-56 overflow-y-auto custom-scrollbar pr-1">
-                  <label class="flex items-center gap-3 p-2 bg-sand/30 rounded-xl cursor-pointer hover:bg-sand/60">
+                <div class="flex flex-col gap-2 max-h-56 overflow-y-auto custom-scrollbar pr-1" id="rfq-vendor-list">
+                  <label class="flex items-center gap-3 p-2 bg-sand/30 rounded-xl cursor-pointer hover:bg-sand/60 w-full">
                     <input type="checkbox" value="Delhi Hardware Hub" checked class="rounded border-cyprus/10 text-cyprus focus:ring-cyprus">
-                    <div>
+                    <div class="flex-1">
                       <span class="block text-xs font-bold text-cyprus">Delhi Hardware Hub</span>
                       <span class="block text-[10px] text-darkText/60">GST: 07AAAAD1234F1Z1</span>
                     </div>
+                    <button type="button" onclick="event.stopPropagation(); event.preventDefault(); removeVendorFromRFQ(this, 'Delhi Hardware Hub')" class="text-red-500 hover:text-red-700 focus:outline-none p-1 transition-colors">
+                      <i class="fas fa-trash-alt text-xs"></i>
+                    </button>
                   </label>
-                  <label class="flex items-center gap-3 p-2 bg-sand/30 rounded-xl cursor-pointer hover:bg-sand/60">
+                  <label class="flex items-center gap-3 p-2 bg-sand/30 rounded-xl cursor-pointer hover:bg-sand/60 w-full">
                     <input type="checkbox" value="TechSolutions India" checked class="rounded border-cyprus/10 text-cyprus focus:ring-cyprus">
-                    <div>
+                    <div class="flex-1">
                       <span class="block text-xs font-bold text-cyprus">TechSolutions India</span>
                       <span class="block text-[10px] text-darkText/60">GST: 09BBBBD5678K2Z5</span>
                     </div>
+                    <button type="button" onclick="event.stopPropagation(); event.preventDefault(); removeVendorFromRFQ(this, 'TechSolutions India')" class="text-red-500 hover:text-red-700 focus:outline-none p-1 transition-colors">
+                      <i class="fas fa-trash-alt text-xs"></i>
+                    </button>
                   </label>
-                  <label class="flex items-center gap-3 p-2 bg-sand/30 rounded-xl cursor-pointer hover:bg-sand/60">
+                  <label class="flex items-center gap-3 p-2 bg-sand/30 rounded-xl cursor-pointer hover:bg-sand/60 w-full">
                     <input type="checkbox" value="Global Furniture Hub" checked class="rounded border-cyprus/10 text-cyprus focus:ring-cyprus">
-                    <div>
+                    <div class="flex-1">
                       <span class="block text-xs font-bold text-cyprus">Global Furniture Hub</span>
                       <span class="block text-[10px] text-darkText/60">GST: 08CCCCD9101M3Z0</span>
                     </div>
+                    <button type="button" onclick="event.stopPropagation(); event.preventDefault(); removeVendorFromRFQ(this, 'Global Furniture Hub')" class="text-red-500 hover:text-red-700 focus:outline-none p-1 transition-colors">
+                      <i class="fas fa-trash-alt text-xs"></i>
+                    </button>
                   </label>
+                </div>
+
+                <!-- Add More Vendors Selection -->
+                <div class="pt-3 border-t border-cyprus/5 flex flex-col gap-1.5">
+                  <label class="block text-[10px] font-bold text-cyprus uppercase">Add Vendor Assignment</label>
+                  <div class="flex gap-2">
+                    <select id="rfq-vendor-select" class="flex-1 px-2.5 py-1.5 bg-sand/35 border border-cyprus/15 rounded-xl text-[11px] focus:outline-none focus:border-cyprus text-cyprus font-semibold">
+                      <!-- Populated dynamically -->
+                    </select>
+                    <button type="button" onclick="addVendorToRFQList()" class="px-3 py-1.5 bg-cyprus text-sand hover:text-white rounded-xl text-xs font-bold transition-all shadow-sm">
+                      + Add
+                    </button>
+                  </div>
                 </div>
 
                 <div class="pt-4 border-t border-cyprus/5 flex flex-col gap-3">
@@ -1358,6 +1380,62 @@
           progressHint.className = "text-[10px] text-darkText/50 italic";
         }
       }
+    }
+
+    // Populate search select dropdown in RFQ setup with unassigned registry vendors
+    function populateRFQVendorSelect() {
+      const select = document.getElementById('rfq-vendor-select');
+      if (!select) return;
+
+      // Find current check value names to prevent duplication
+      const assigned = [];
+      document.querySelectorAll('#rfq-vendor-list input[type="checkbox"]').forEach(cb => {
+        assigned.push(cb.value);
+      });
+
+      // Filter available unassigned vendors
+      const available = suppliersDatabase.filter(sup => !assigned.includes(sup.name));
+
+      if (available.length === 0) {
+        select.innerHTML = '<option value="">All registry partners assigned</option>';
+        return;
+      }
+
+      select.innerHTML = available.map(sup => `
+        <option value="${sup.name}">${sup.name} (${sup.category})</option>
+      `).join('');
+    }
+
+    // Add selected registry vendor to RFQ checkbox list
+    function addVendorToRFQList() {
+      const select = document.getElementById('rfq-vendor-select');
+      const list = document.getElementById('rfq-vendor-list');
+      if (!select || !list) return;
+
+      const name = select.value;
+      if (!name) return;
+
+      const vendor = suppliersDatabase.find(sup => sup.name === name);
+      if (!vendor) return;
+
+      const label = document.createElement('label');
+      label.className = "flex items-center gap-3 p-2 bg-sand/30 rounded-xl cursor-pointer hover:bg-sand/60";
+      label.innerHTML = `
+        <input type="checkbox" value="${vendor.name}" checked class="rounded border-cyprus/10 text-cyprus focus:ring-cyprus">
+        <div>
+          <span class="block text-xs font-bold text-cyprus">${vendor.name}</span>
+          <span class="block text-[10px] text-darkText/60">GST: ${vendor.gst}</span>
+        </div>
+      `;
+      list.appendChild(label);
+
+      // Re-populate select dropdown to reflect addition
+      populateRFQVendorSelect();
+      
+      // Update progress bar
+      updateRFQProgress();
+      
+      alert(`Supplier "${vendor.name}" added to RFQ assignment network.`);
     }
 
     // Load standard data on load is defined at the bottom of the script
@@ -2185,6 +2263,7 @@
       renderDashboardForRole(currentRole);
       // Rerender active views if they are open
       updateVendorsMasterTable();
+      populateRFQVendorSelect();
       alert(`Supplier "${name}" registered successfully inside ERP database!`);
       logAuditEvent(currentRole === 'admin' ? "System Admin" : "Priya Sharma", `Registered new supplier partner: ${name} (GST: ${gst})`, "admin");
     }
@@ -3100,6 +3179,7 @@
         alert(`Supplier status for ${sup.name} changed to: ${sup.status}`);
         renderDashboardForRole(currentRole);
         updateVendorsMasterTable();
+      populateRFQVendorSelect();
       }
     }
 
@@ -3237,6 +3317,62 @@
       }
     }
 
+    // Populate search select dropdown in RFQ setup with unassigned registry vendors
+    function populateRFQVendorSelect() {
+      const select = document.getElementById('rfq-vendor-select');
+      if (!select) return;
+
+      // Find current check value names to prevent duplication
+      const assigned = [];
+      document.querySelectorAll('#rfq-vendor-list input[type="checkbox"]').forEach(cb => {
+        assigned.push(cb.value);
+      });
+
+      // Filter available unassigned vendors
+      const available = suppliersDatabase.filter(sup => !assigned.includes(sup.name));
+
+      if (available.length === 0) {
+        select.innerHTML = '<option value="">All registry partners assigned</option>';
+        return;
+      }
+
+      select.innerHTML = available.map(sup => `
+        <option value="${sup.name}">${sup.name} (${sup.category})</option>
+      `).join('');
+    }
+
+    // Add selected registry vendor to RFQ checkbox list
+    function addVendorToRFQList() {
+      const select = document.getElementById('rfq-vendor-select');
+      const list = document.getElementById('rfq-vendor-list');
+      if (!select || !list) return;
+
+      const name = select.value;
+      if (!name) return;
+
+      const vendor = suppliersDatabase.find(sup => sup.name === name);
+      if (!vendor) return;
+
+      const label = document.createElement('label');
+      label.className = "flex items-center gap-3 p-2 bg-sand/30 rounded-xl cursor-pointer hover:bg-sand/60";
+      label.innerHTML = `
+        <input type="checkbox" value="${vendor.name}" checked class="rounded border-cyprus/10 text-cyprus focus:ring-cyprus">
+        <div>
+          <span class="block text-xs font-bold text-cyprus">${vendor.name}</span>
+          <span class="block text-[10px] text-darkText/60">GST: ${vendor.gst}</span>
+        </div>
+      `;
+      list.appendChild(label);
+
+      // Re-populate select dropdown to reflect addition
+      populateRFQVendorSelect();
+      
+      // Update progress bar
+      updateRFQProgress();
+      
+      alert(`Supplier "${vendor.name}" added to RFQ assignment network.`);
+    }
+
     // Load standard data on load
     window.onload = () => {
       renderAuditTrail();
@@ -3245,7 +3381,9 @@
 
       // Render standard data on load
       updateVendorsMasterTable();
+      populateRFQVendorSelect();
       initCharts();
+      populateRFQVendorSelect();
 
       // Bind input events to RFQ Creation Screen for progress updates
       const rfqCreateScreen = document.getElementById('screen-rfq-create');
