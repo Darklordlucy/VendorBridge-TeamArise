@@ -328,7 +328,7 @@
     <main class="flex-1 flex flex-col overflow-y-auto custom-scrollbar p-6 bg-sand relative">
 
       <!-- Header Banner / Topbar -->
-      <header class="flex justify-between items-center mb-6 bg-white/70 backdrop-blur px-6 py-4 rounded-2xl border border-cyprus/5 shadow-sm">
+      <header class="flex justify-between items-center mb-6 py-2 px-4">
         <div class="flex items-center gap-4">
           <button onclick="toggleSidebar()" class="text-cyprus hover:bg-cyprus/5 p-2 rounded-lg lg:hidden">
             <i class="fas fa-bars text-xl"></i>
@@ -338,17 +338,19 @@
               <span id="header-greeting-icon"><i class="fas fa-sun text-yellow-500"></i></span>
               <span id="header-greeting-text">Hello, Priya Sharma!</span>
             </h1>
-            <p class="text-xs text-darkText/60">Procurement & Vendor ERP Workspace</p>
           </div>
         </div>
+        
+        <!-- Search bar in the middle of the grid -->
+        <div class="relative hidden sm:block flex-1 max-w-md mx-6">
+          <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-cyprus/40">
+            <i class="fas fa-search"></i>
+          </span>
+          <input type="text" placeholder="Search RFQs, vendors, orders..." class="w-full pl-9 pr-4 py-1.5 bg-sandDark/40 border border-cyprus/10 rounded-xl text-xs text-cyprus focus:outline-none focus:border-cyprus/30 transition-all">
+        </div>
+        
         <!-- Right search and quick switches -->
         <div class="flex items-center gap-4">
-          <div class="relative hidden sm:block">
-            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-cyprus/40">
-              <i class="fas fa-search"></i>
-            </span>
-            <input type="text" placeholder="Search RFQs, vendors, orders..." class="pl-9 pr-4 py-1.5 bg-sandDark/40 border border-cyprus/10 rounded-xl text-xs text-cyprus focus:outline-none focus:border-cyprus/30 w-64 transition-all">
-          </div>
           <button onclick="alert('Notification Center: 3 quotes received, 1 PO awaiting approval.')" class="w-9 h-9 rounded-xl bg-sandDark/40 flex items-center justify-center text-cyprus hover:bg-sandDark/80 transition-all relative">
             <i class="fas fa-bell"></i>
             <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
