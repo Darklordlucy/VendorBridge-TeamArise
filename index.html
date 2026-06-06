@@ -716,22 +716,6 @@
             </button>
           </div>
 
-          <!-- AI recommendation Box -->
-          <div class="bg-white/80 border border-cyprus/10 rounded-2xl p-5 mb-6 shadow-sm flex flex-col sm:flex-row items-start gap-4">
-            <div class="w-10 h-10 rounded-xl bg-cyprus text-sand flex items-center justify-center text-lg shrink-0">
-              <i class="fas fa-robot"></i>
-            </div>
-            <div>
-              <span class="text-xs uppercase font-bold text-cyprus tracking-wider flex items-center gap-1.5">
-                Procurement AI Copilot Suggestion
-                <span class="bg-mint text-cyprus text-[9px] px-1.5 py-0.5 rounded font-bold uppercase">Optimized</span>
-              </span>
-              <p class="text-xs font-medium text-darkText/80 mt-1 leading-relaxed">
-                Recommended: <strong class="text-cyprus">Delhi Hardware Hub</strong>. They present the lowest total contract value at <strong>₹22,50,000.00</strong> (tax excluded) and meet your required 7-day delivery timeline with an outstanding historic supplier score of <strong>4.8★</strong>.
-              </p>
-            </div>
-          </div>
-
           <!-- Sorting and Filtering Controls -->
           <div class="flex flex-wrap items-center justify-between gap-4 mb-4 bg-white/40 p-4 rounded-xl border border-cyprus/5">
             <div class="flex items-center gap-2">
@@ -748,10 +732,10 @@
             <div class="overflow-x-auto custom-scrollbar">
               <table class="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr class="bg-sand/30 text-cyprus font-semibold border-b border-cyprus/10">
+                  <tr class="bg-sandDark text-cyprus font-bold border-b-2 border-cyprus/25">
                     <th class="py-3.5 px-4 w-64">Item Specifications</th>
                     <th class="py-3.5 px-4 w-20 text-center">Qty</th>
-                    <th class="py-3.5 px-4 bg-cyprus/5 text-cyprus font-bold">Delhi Hardware (Recommended)</th>
+                    <th class="py-3.5 px-4 bg-green-100 text-green-800 font-bold border-x border-green-200">Delhi Hardware (Recommended)</th>
                     <th class="py-3.5 px-4">TechSolutions India</th>
                     <th class="py-3.5 px-4">Global Furniture Hub</th>
                   </tr>
@@ -760,47 +744,55 @@
                   <tr class="border-b border-cyprus/5">
                     <td class="py-4 px-4 font-medium text-cyprus">Dell Latitude 3440 Laptop</td>
                     <td class="py-4 px-4 text-center">50</td>
-                    <!-- Delhi Hardware Price (Lowest highlighted in light green) -->
-                    <td class="py-4 px-4 bg-green-50 text-green-700 font-bold border-x border-green-200">
-                      ₹42,000.00 <span class="block text-[10px] font-normal text-darkText/50">Total: ₹21,00,000</span>
+                    <!-- Delhi Hardware Price (Lowest highlighted in light green, styled with total price larger) -->
+                    <td class="py-4 px-4 bg-green-50 text-green-850 font-bold border-x border-green-200">
+                      <span class="text-sm font-bold block text-green-800">₹21,00,000.00</span>
+                      <span class="block text-[10px] font-normal text-green-700/70">Unit: ₹42,000.00</span>
                     </td>
                     <td class="py-4 px-4 text-darkText/70">
-                      ₹44,500.00 <span class="block text-[10px] text-darkText/50">Total: ₹22,25,000</span>
+                      <span class="text-sm font-semibold block text-darkText/80">₹22,25,000.00</span>
+                      <span class="block text-[10px] font-normal text-darkText/50">Unit: ₹44,500.00</span>
                     </td>
                     <td class="py-4 px-4 text-darkText/40 italic">
-                      No Quote <span class="block text-[10px]">--</span>
+                      <span class="text-sm font-normal block">No Quote</span>
+                      <span class="block text-[10px] font-normal">--</span>
                     </td>
                   </tr>
 
                   <tr class="border-b border-cyprus/5">
                     <td class="py-4 px-4 font-medium text-cyprus">Ergonomic Standing Office Desk</td>
                     <td class="py-4 px-4 text-center">10</td>
-                    <td class="py-4 px-4 bg-cyprus/5 text-darkText/70 border-x border-cyprus/5">
-                      ₹15,000.00 <span class="block text-[10px] text-darkText/50">Total: ₹1,50,000</span>
+                    <!-- Delhi Hardware Price (Highlighted green as part of column highlight) -->
+                    <td class="py-4 px-4 bg-green-50/50 text-darkText/70 border-x border-green-200/40">
+                      <span class="text-sm font-semibold block text-darkText/80">₹1,50,000.00</span>
+                      <span class="block text-[10px] font-normal text-darkText/50">Unit: ₹15,000.00</span>
                     </td>
                     <td class="py-4 px-4 text-darkText/70">
-                      ₹16,200.00 <span class="block text-[10px] text-darkText/50">Total: ₹1,62,000</span>
+                      <span class="text-sm font-semibold block text-darkText/80">₹1,62,000.00</span>
+                      <span class="block text-[10px] font-normal text-darkText/50">Unit: ₹16,200.00</span>
                     </td>
-                    <!-- Global Furniture Price (Lowest) -->
+                    <!-- Global Furniture Price (Lowest, highlighted) -->
                     <td class="py-4 px-4 bg-green-50 text-green-700 font-bold border-x border-green-200">
-                      ₹13,800.00 <span class="block text-[10px] font-normal text-darkText/50">Total: ₹1,38,000</span>
+                      <span class="text-sm font-bold block">₹1,38,000.00</span>
+                      <span class="block text-[10px] font-normal text-green-600/70">Unit: ₹13,800.00</span>
                     </td>
                   </tr>
 
                   <tr class="bg-sand/20 font-bold text-cyprus">
                     <td class="py-4 px-4">Summary Summary</td>
                     <td class="py-4 px-4"></td>
-                    <td class="py-4 px-4 bg-cyprus/10 border-x border-cyprus/10 text-cyprus">
-                      Total: ₹22,50,000
-                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 5 Days | 4.8★</span>
+                    <!-- Delhi Hardware summary (lowest overall, highlighted in green column summary) -->
+                    <td class="py-4 px-4 bg-green-100/60 border-x border-green-200 text-cyprus font-bold">
+                      <span class="text-base font-bold block text-cyprus">Total: ₹22,50,000</span>
+                      <span class="block text-[10px] text-darkText/60 font-semibold mt-0.5">Delivery: 5 Days | 4.8★</span>
                     </td>
                     <td class="py-4 px-4">
-                      Total: ₹23,87,000
-                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 8 Days | 4.2★</span>
+                      <span class="text-sm font-bold block text-cyprus">Total: ₹23,87,000</span>
+                      <span class="block text-[10px] text-darkText/60 font-semibold mt-0.5">Delivery: 8 Days | 4.2★</span>
                     </td>
                     <td class="py-4 px-4">
-                      Total: ₹1,38,000 (Partial)
-                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 12 Days | 3.9★</span>
+                      <span class="text-sm font-bold block text-cyprus">Total: ₹1,38,000 (Partial)</span>
+                      <span class="block text-[10px] text-darkText/60 font-semibold mt-0.5">Delivery: 12 Days | 3.9★</span>
                     </td>
                   </tr>
                 </tbody>
@@ -2492,10 +2484,10 @@
             <div class="overflow-x-auto custom-scrollbar">
               <table class="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr class="bg-sand/30 text-cyprus font-semibold border-b border-cyprus/10">
+                  <tr class="bg-sandDark text-cyprus font-bold border-b-2 border-cyprus/25">
                     <th class="py-3.5 px-4 w-64">Item Specifications</th>
                     <th class="py-3.5 px-4 w-20 text-center">Qty</th>
-                    <th class="py-3.5 px-4 bg-cyprus/5 text-cyprus font-bold">Delhi Hardware (Recommended)</th>
+                    <th class="py-3.5 px-4 bg-green-100 text-green-800 font-bold border-x border-green-200">Delhi Hardware (Recommended)</th>
                     <th class="py-3.5 px-4">TechSolutions India</th>
                     <th class="py-3.5 px-4">Global Furniture Hub</th>
                   </tr>
@@ -2504,43 +2496,49 @@
                   <tr class="border-b border-cyprus/5">
                     <td class="py-4 px-4 font-medium text-cyprus">Dell Latitude 3440 Laptop</td>
                     <td class="py-4 px-4 text-center">50</td>
-                    <td class="py-4 px-4 bg-green-50 text-green-700 font-bold border-x border-green-200">
-                      ₹42,000.00 <span class="block text-[10px] font-normal text-darkText/50">Total: ₹21,00,000</span>
+                    <td class="py-4 px-4 bg-green-50 text-green-850 font-bold border-x border-green-200">
+                      <span class="text-sm font-bold block text-green-800">₹21,00,000.00</span>
+                      <span class="block text-[10px] font-normal text-green-700/70">Unit: ₹42,000.00</span>
                     </td>
                     <td class="py-4 px-4 text-darkText/70">
-                      ₹44,500.00 <span class="block text-[10px] text-darkText/50">Total: ₹22,25,000</span>
+                      <span class="text-sm font-semibold block text-darkText/80">₹22,25,000.00</span>
+                      <span class="block text-[10px] font-normal text-darkText/50">Unit: ₹44,500.00</span>
                     </td>
                     <td class="py-4 px-4 text-darkText/40 italic">
-                      No Quote <span class="block text-[10px]">--</span>
+                      <span class="text-sm font-normal block">No Quote</span>
+                      <span class="block text-[10px] font-normal">--</span>
                     </td>
                   </tr>
                   <tr class="border-b border-cyprus/5">
                     <td class="py-4 px-4 font-medium text-cyprus">Ergonomic Standing Office Desk</td>
                     <td class="py-4 px-4 text-center">10</td>
-                    <td class="py-4 px-4 bg-cyprus/5 text-darkText/70 border-x border-cyprus/5">
-                      ₹15,000.00 <span class="block text-[10px] text-darkText/50">Total: ₹1,50,000</span>
+                    <td class="py-4 px-4 bg-green-50/50 text-darkText/70 border-x border-green-200/40">
+                      <span class="text-sm font-semibold block text-darkText/80">₹1,50,000.00</span>
+                      <span class="block text-[10px] font-normal text-darkText/50">Unit: ₹15,000.00</span>
                     </td>
                     <td class="py-4 px-4 text-darkText/70">
-                      ₹16,200.00 <span class="block text-[10px] text-darkText/50">Total: ₹1,62,000</span>
+                      <span class="text-sm font-semibold block text-darkText/80">₹1,62,000.00</span>
+                      <span class="block text-[10px] font-normal text-darkText/50">Unit: ₹16,200.00</span>
                     </td>
                     <td class="py-4 px-4 bg-green-50 text-green-700 font-bold border-x border-green-200">
-                      ₹13,800.00 <span class="block text-[10px] font-normal text-darkText/50">Total: ₹1,38,000</span>
+                      <span class="text-sm font-bold block">₹1,38,000.00</span>
+                      <span class="block text-[10px] font-normal text-green-600/70">Unit: ₹13,800.00</span>
                     </td>
                   </tr>
                   <tr class="bg-sand/20 font-bold text-cyprus">
                     <td class="py-4 px-4">Summary Summary</td>
                     <td class="py-4 px-4"></td>
-                    <td class="py-4 px-4 bg-cyprus/10 border-x border-cyprus/10 text-cyprus">
-                      Total: ₹22,50,000
-                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 5 Days | 4.8★</span>
+                    <td class="py-4 px-4 bg-green-100/60 border-x border-green-200 text-cyprus font-bold">
+                      <span class="text-base font-bold block text-cyprus">Total: ₹22,50,000</span>
+                      <span class="block text-[10px] text-darkText/60 font-semibold mt-0.5">Delivery: 5 Days | 4.8★</span>
                     </td>
                     <td class="py-4 px-4">
-                      Total: ₹23,87,000
-                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 8 Days | 4.2★</span>
+                      <span class="text-sm font-bold block text-cyprus">Total: ₹23,87,000</span>
+                      <span class="block text-[10px] text-darkText/60 font-semibold mt-0.5">Delivery: 8 Days | 4.2★</span>
                     </td>
                     <td class="py-4 px-4">
-                      Total: ₹1,38,000 (Partial)
-                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 12 Days | 3.9★</span>
+                      <span class="text-sm font-bold block text-cyprus">Total: ₹1,38,000 (Partial)</span>
+                      <span class="block text-[10px] text-darkText/60 font-semibold mt-0.5">Delivery: 12 Days | 3.9★</span>
                     </td>
                   </tr>
                 </tbody>
@@ -2554,11 +2552,11 @@
             <div class="overflow-x-auto custom-scrollbar">
               <table class="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr class="bg-sand/30 text-cyprus font-semibold border-b border-cyprus/10">
+                  <tr class="bg-sandDark text-cyprus font-bold border-b-2 border-cyprus/25">
                     <th class="py-3.5 px-4 w-64">Item Specifications</th>
                     <th class="py-3.5 px-4 w-20 text-center">Qty</th>
                     <th class="py-3.5 px-4">Global Furniture Hub</th>
-                    <th class="py-3.5 px-4 bg-cyprus/5 text-cyprus font-bold">Delhi Hardware (Recommended)</th>
+                    <th class="py-3.5 px-4 bg-green-100 text-green-800 font-bold border-x border-green-200">Delhi Hardware (Recommended)</th>
                     <th class="py-3.5 px-4">TechSolutions India</th>
                   </tr>
                 </thead>
@@ -2567,42 +2565,48 @@
                     <td class="py-4 px-4 font-medium text-cyprus">Dell Latitude 3440 Laptop</td>
                     <td class="py-4 px-4 text-center">50</td>
                     <td class="py-4 px-4 text-darkText/40 italic">
-                      No Quote <span class="block text-[10px]">--</span>
+                      <span class="text-sm font-normal block">No Quote</span>
+                      <span class="block text-[10px] font-normal">--</span>
                     </td>
-                    <td class="py-4 px-4 bg-green-50 text-green-700 font-bold border-x border-green-200">
-                      ₹42,000.00 <span class="block text-[10px] font-normal text-darkText/50">Total: ₹21,00,000</span>
+                    <td class="py-4 px-4 bg-green-50 text-green-855 font-bold border-x border-green-200">
+                      <span class="text-sm font-bold block text-green-800">₹21,00,000.00</span>
+                      <span class="block text-[10px] font-normal text-green-700/70">Unit: ₹42,000.00</span>
                     </td>
                     <td class="py-4 px-4 text-darkText/70">
-                      ₹44,500.00 <span class="block text-[10px] text-darkText/50">Total: ₹22,25,000</span>
+                      <span class="text-sm font-semibold block text-darkText/80">₹22,25,000.00</span>
+                      <span class="block text-[10px] font-normal text-darkText/50">Unit: ₹44,500.00</span>
                     </td>
                   </tr>
                   <tr class="border-b border-cyprus/5">
                     <td class="py-4 px-4 font-medium text-cyprus">Ergonomic Standing Office Desk</td>
                     <td class="py-4 px-4 text-center">10</td>
                     <td class="py-4 px-4 bg-green-50 text-green-700 font-bold border-x border-green-200">
-                      ₹13,800.00 <span class="block text-[10px] font-normal text-darkText/50">Total: ₹1,38,000</span>
+                      <span class="text-sm font-bold block">₹1,38,000.00</span>
+                      <span class="block text-[10px] font-normal text-green-600/70">Unit: ₹13,800.00</span>
                     </td>
-                    <td class="py-4 px-4 bg-cyprus/5 text-darkText/70 border-x border-cyprus/5">
-                      ₹15,000.00 <span class="block text-[10px] text-darkText/50">Total: ₹1,50,000</span>
+                    <td class="py-4 px-4 bg-green-50/50 text-darkText/70 border-x border-green-200/40">
+                      <span class="text-sm font-semibold block text-darkText/80">₹1,50,000.00</span>
+                      <span class="block text-[10px] font-normal text-darkText/50">Unit: ₹15,000.00</span>
                     </td>
                     <td class="py-4 px-4 text-darkText/70">
-                      ₹16,200.00 <span class="block text-[10px] text-darkText/50">Total: ₹1,62,000</span>
+                      <span class="text-sm font-semibold block text-darkText/80">₹1,62,000.00</span>
+                      <span class="block text-[10px] font-normal text-darkText/50">Unit: ₹16,200.00</span>
                     </td>
                   </tr>
                   <tr class="bg-sand/20 font-bold text-cyprus">
                     <td class="py-4 px-4">Summary Summary</td>
                     <td class="py-4 px-4"></td>
                     <td class="py-4 px-4">
-                      Total: ₹1,38,000 (Partial)
-                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 12 Days | 3.9★</span>
+                      <span class="text-sm font-bold block text-cyprus">Total: ₹1,38,000 (Partial)</span>
+                      <span class="block text-[10px] text-darkText/60 font-semibold mt-0.5">Delivery: 12 Days | 3.9★</span>
                     </td>
-                    <td class="py-4 px-4 bg-cyprus/10 border-x border-cyprus/10 text-cyprus">
-                      Total: ₹22,50,000
-                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 5 Days | 4.8★</span>
+                    <td class="py-4 px-4 bg-green-100/60 border-x border-green-200 text-cyprus font-bold">
+                      <span class="text-base font-bold block text-cyprus">Total: ₹22,50,000</span>
+                      <span class="block text-[10px] text-darkText/60 font-semibold mt-0.5">Delivery: 5 Days | 4.8★</span>
                     </td>
                     <td class="py-4 px-4">
-                      Total: ₹23,87,000
-                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 8 Days | 4.2★</span>
+                      <span class="text-sm font-bold block text-cyprus">Total: ₹23,87,000</span>
+                      <span class="block text-[10px] text-darkText/60 font-semibold mt-0.5">Delivery: 8 Days | 4.2★</span>
                     </td>
                   </tr>
                 </tbody>
@@ -2616,10 +2620,10 @@
             <div class="overflow-x-auto custom-scrollbar">
               <table class="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr class="bg-sand/30 text-cyprus font-semibold border-b border-cyprus/10">
+                  <tr class="bg-sandDark text-cyprus font-bold border-b-2 border-cyprus/25">
                     <th class="py-3.5 px-4 w-64">Item Specifications</th>
                     <th class="py-3.5 px-4 w-20 text-center">Qty</th>
-                    <th class="py-3.5 px-4 bg-cyprus/5 text-cyprus font-bold">Delhi Hardware (Recommended)</th>
+                    <th class="py-3.5 px-4 bg-green-100 text-green-800 font-bold border-x border-green-200">Delhi Hardware (Recommended)</th>
                     <th class="py-3.5 px-4">TechSolutions India</th>
                     <th class="py-3.5 px-4">Global Furniture Hub</th>
                   </tr>
@@ -2628,43 +2632,49 @@
                   <tr class="border-b border-cyprus/5">
                     <td class="py-4 px-4 font-medium text-cyprus">Dell Latitude 3440 Laptop</td>
                     <td class="py-4 px-4 text-center">50</td>
-                    <td class="py-4 px-4 bg-green-50 text-green-700 font-bold border-x border-green-200">
-                      ₹42,000.00 <span class="block text-[10px] font-normal text-darkText/50">Total: ₹21,00,000</span>
+                    <td class="py-4 px-4 bg-green-50 text-green-855 font-bold border-x border-green-200">
+                      <span class="text-sm font-bold block text-green-800">₹21,00,000.00</span>
+                      <span class="block text-[10px] font-normal text-green-700/70">Unit: ₹42,000.00</span>
                     </td>
                     <td class="py-4 px-4 text-darkText/70">
-                      ₹44,500.00 <span class="block text-[10px] text-darkText/50">Total: ₹22,25,000</span>
+                      <span class="text-sm font-semibold block text-darkText/80">₹22,25,000.00</span>
+                      <span class="block text-[10px] font-normal text-darkText/50">Unit: ₹44,500.00</span>
                     </td>
                     <td class="py-4 px-4 text-darkText/40 italic">
-                      No Quote <span class="block text-[10px]">--</span>
+                      <span class="text-sm font-normal block">No Quote</span>
+                      <span class="block text-[10px] font-normal">--</span>
                     </td>
                   </tr>
                   <tr class="border-b border-cyprus/5">
                     <td class="py-4 px-4 font-medium text-cyprus">Ergonomic Standing Office Desk</td>
                     <td class="py-4 px-4 text-center">10</td>
-                    <td class="py-4 px-4 bg-cyprus/5 text-darkText/70 border-x border-cyprus/5">
-                      ₹15,000.00 <span class="block text-[10px] text-darkText/50">Total: ₹1,50,000</span>
+                    <td class="py-4 px-4 bg-green-50/50 text-darkText/70 border-x border-green-200/40">
+                      <span class="text-sm font-semibold block text-darkText/80">₹1,50,000.00</span>
+                      <span class="block text-[10px] font-normal text-darkText/50">Unit: ₹15,000.00</span>
                     </td>
                     <td class="py-4 px-4 text-darkText/70">
-                      ₹16,200.00 <span class="block text-[10px] text-darkText/50">Total: ₹1,62,000</span>
+                      <span class="text-sm font-semibold block text-darkText/80">₹1,62,000.00</span>
+                      <span class="block text-[10px] font-normal text-darkText/50">Unit: ₹16,200.00</span>
                     </td>
                     <td class="py-4 px-4 bg-green-50 text-green-700 font-bold border-x border-green-200">
-                      ₹13,800.00 <span class="block text-[10px] font-normal text-darkText/50">Total: ₹1,38,000</span>
+                      <span class="text-sm font-bold block">₹1,38,000.00</span>
+                      <span class="block text-[10px] font-normal text-green-600/70">Unit: ₹13,800.00</span>
                     </td>
                   </tr>
                   <tr class="bg-sand/20 font-bold text-cyprus">
                     <td class="py-4 px-4">Summary Summary</td>
                     <td class="py-4 px-4"></td>
-                    <td class="py-4 px-4 bg-cyprus/10 border-x border-cyprus/10 text-cyprus">
-                      Total: ₹22,50,000
-                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 5 Days | 4.8★</span>
+                    <td class="py-4 px-4 bg-green-100/60 border-x border-green-200 text-cyprus font-bold">
+                      <span class="text-base font-bold block text-cyprus">Total: ₹22,50,000</span>
+                      <span class="block text-[10px] text-darkText/60 font-semibold mt-0.5">Delivery: 5 Days | 4.8★</span>
                     </td>
                     <td class="py-4 px-4">
-                      Total: ₹23,87,000
-                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 8 Days | 4.2★</span>
+                      <span class="text-sm font-bold block text-cyprus">Total: ₹23,87,000</span>
+                      <span class="block text-[10px] text-darkText/60 font-semibold mt-0.5">Delivery: 8 Days | 4.2★</span>
                     </td>
                     <td class="py-4 px-4">
-                      Total: ₹1,38,000 (Partial)
-                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 12 Days | 3.9★</span>
+                      <span class="text-sm font-bold block text-cyprus">Total: ₹1,38,000 (Partial)</span>
+                      <span class="block text-[10px] text-darkText/60 font-semibold mt-0.5">Delivery: 12 Days | 3.9★</span>
                     </td>
                   </tr>
                 </tbody>
