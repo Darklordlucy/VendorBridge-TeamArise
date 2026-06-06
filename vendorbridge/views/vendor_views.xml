@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<<odoo>
+    <data>
+        <!-- Vendor Tree View -->
+        <record id="view_vendor_tree" model="ir.ui.view">
+            <field name="name">vendorbridge.vendor.tree</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <tree string="Vendors" decoration-muted="x_vendor_status=='inactive'" decoration-danger="x_vendor_status=='blocked'">
+                    <field name="name"/>
+                    <field name="x_gst_number"/>
+                    <field name="x_vendor_category"/>
+                    <field name="x_vendor_status"/>
+                    <field name="x_rating" widget="priority"/>
+                    <field name="x_on_time_rate"/>
+                    <field name="email"/>
+                    <field name="phone"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Vendor Form View -->
+        <record id="view_vendor_form" model="ir.ui.view">
+            <field name="name">vendorbridge.vendor.form</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <form string="Vendor">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="x_vendor_status" widget="statusbar"/>
+                            </button>
+                        </div>
+                        <field name="image_1920" widget="image" class="oe_avatar"/>
+                        <div class="oe_title">
+                            <h1><field name="name" placeholder="Vendor Name"/></h1>
+                        </div>
+                        <group>
+                            <group string="Vendor Information">
+                                <field name="x_is_vendor" invisible="1"/>
+                                <field name="x_gst_number"/>
+                                <field name="x_vendor_category"/>
+                                <field name="x_vendor_status"/>
+                                <field name="x_rating" widget="priority"/>
+                                <field name="x_on_time_rate"/>
+                            </group>
+                            <group string="Contact">
+                                <field name="email"/>
+                                <field name="phone"/>
+                                <field name="street"/>
+                                <field name="city"/>
+                                <field name="country_id"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Vendor Search View -->
+        <record id="view_vendor_search" model="ir.ui.view">
+            <field name="name">vendorbridge.vendor.search</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <search string="Search Vendors">
+                    <field name="name"/>
+                    <field name="x_gst_number"/>
+                    <field name="x_vendor_category"/>
+                    <filter string="Active" name="active" domain="[('x_vendor_status', '=', 'active')]"/>
+                    <filter string="Inactive" name="inactive" domain="[('x_vendor_status', '=', 'inactive')]"/>
+                    <filter string="Blocked" name="blocked" domain="[('x_vendor_status', '=', 'blocked')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Category" name="category" context="{'group_by': 'x_vendor_category'}"/>
+                        <filter string="Status" name="status" context="{'group_by': 'x_vendor_status'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Vendor Action -->
+        <record id="action_vendor_list" model="ir.actions.act_window">
+            <field name="name">Vendors</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('x_is_vendor', '=', True)]</field>
+            <field name="context">{'default_x_is_vendor': True}</field>
+            <field name="search_view_id" ref="view_vendor_search"/>
+        </record>
+    </data>
+</odoo>

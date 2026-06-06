@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # -*- coding: utf-8 -*-
 {
     'name': 'VendorBridge Portal',
@@ -10,11 +11,20 @@
     """,
     'author': 'VendorBridge Hackathon Team',
     'depends': ['website', 'vendorbridge'],
+=======
+{
+    'name': 'VendorBridge Website Portal',
+    'version': '1.0',
+    'category': 'Website',
+    'summary': 'Vendor-facing portal for VendorBridge',
+    'depends': ['vendorbridge', 'website', 'portal'],
+>>>>>>> origin/feat/backend
     'data': [
         'views/vendor_portal.xml',
         'views/rfq_list.xml',
         'views/comparison_page.xml',
     ],
+<<<<<<< HEAD
     'assets': {
         'web.assets_frontend': [
             'vendorbridge_website/static/css/portal.css',
@@ -27,3 +37,9 @@
     'auto_install': False,
     'license': 'LGPL-3',
 }
+=======
+    'installable': True,
+    'application': False,
+    'license': 'LGPL-3',
+}
+>>>>>>> origin/feat/backend

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<<odoo>
+    <data>
+        <record id="view_quotation_tree" model="ir.ui.view">
+            <field name="name">vendorbridge.quotation.tree</field>
+            <field name="model">vendorbridge.quotation</field>
+            <field name="arch" type="xml">
+                <tree string="Quotations">
+                    <field name="rfq_id"/>
+                    <field name="vendor_id"/>
+                    <field name="total_amount"/>
+                    <field name="delivery_days"/>
+                    <field name="status"/>
+                    <field name="submitted_at"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_quotation_list" model="ir.actions.act_window">
+            <field name="name">Quotations</field>
+            <field name="res_model">vendorbridge.quotation</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

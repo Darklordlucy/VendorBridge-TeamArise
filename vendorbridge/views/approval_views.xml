@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<<odoo>
+    <data>
+        <record id="view_approval_tree" model="ir.ui.view">
+            <field name="name">vendorbridge.approval.tree</field>
+            <field name="model">vendorbridge.approval</field>
+            <field name="arch" type="xml">
+                <tree string="Approvals">
+                    <field name="rfq_id"/>
+                    <field name="approver_id"/>
+                    <field name="state"/>
+                    <field name="approved_at"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_approval_list" model="ir.actions.act_window">
+            <field name="name">Approvals</field>
+            <field name="res_model">vendorbridge.approval</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

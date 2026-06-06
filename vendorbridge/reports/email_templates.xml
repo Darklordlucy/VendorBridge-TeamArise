@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<<odoo>
+    <data noupdate="1">
+        <!-- RFQ Invitation Email -->
+        <record id="email_template_rfq_invite" model="mail.template">
+            <field name="name">RFQ Invitation</field>
+            <field name="model_id" ref="purchase.model_purchase_order"/>
+            <field name="subject">New RFQ: ${object.x_rfq_title}</field>
+            <field name="email_from">${user.email_formatted}</field>
+            <field name="partner_to">${object.vendor_ids[0].id if object.vendor_ids else ''}</field>
+            <field name="body_html" type="html">
+                <![CDATA[
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <h2 style="color: #714B67;">New RFQ Invitation</h2>
+                    <p>Dear Vendor,</p>
+                    <p>You have been invited to submit a quotation for:</p>
+                    <div style="background: #f5f5f5; padding: 15px; border-radius: 8px;">
+                        <h3>${object.x_rfq_title}</h3>
+                        <p><strong>Deadline:</strong> ${object.x_deadline}</p>
+                    </div>
+                    <p>Please submit your quotation using the link below:</p>
+                    <a href="/vendor/quote/${object.id}-${object.vendor_ids[0].id}" 
+                       style="background: #714B67; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block;">
+                        Submit Quotation
+                    </a>
+                    <p style="color: #666; font-size: 12px; margin-top: 30px;">
+                        This link expires on ${object.x_deadline}.<<br/>
+                        VendorBridge - Procurement Simplified
+                    </p>
+                </div>
+                ]]>
+            </field>
+        </record>
+
+        <!-- Invoice Email -->
+        <record id="email_template_invoice" model="mail.template">
+            <field name="name">Invoice Email</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="subject">Invoice ${object.name} from ${object.company_id.name}</field>
+            <field name="email_from">${user.email_formatted}</field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="body_html" type="html">
+                <![CDATA[
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <h2 style="color: #714B67;">Invoice</h2>
+                    <p>Dear ${object.partner_id.name},</p>
+                    <p>Please find attached the invoice for your reference:</p>
+                    <div style="background: #f5f5f5; padding: 15px; border-radius: 8px;">
+                        <p><strong>Invoice #:</strong> ${object.name}</p>
+                        <p><strong>Amount:</strong> Rs.${object.amount_total}</p>
+                        <p><strong>Due Date:</strong> ${object.invoice_date_due}</p>
+                    </div>
+                    <p>Thank you for your business.</p>
+                    <p style="color: #666; font-size: 12px;">
+                        VendorBridge - Procurement Simplified
+                    </p>
+                </div>
+                ]]>
+            </field>
+            <field name="report_template" ref="account.account_invoices"/>
+            <field name="report_name">Invoice_${(object.name).replace('/','_')}</field>
+        </record>
+    </data>
+</odoo>
