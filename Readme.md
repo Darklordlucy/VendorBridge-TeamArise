@@ -177,20 +177,6 @@ The module automatically loads demo data on install:
 ---
 
 
-## 📸 Screenshots
-
-> *(Add screenshots here after deployment)*
-
-| Dashboard | Quotation Comparison | Approval Workflow |
-|-----------|---------------------|-------------------|
-| ![Dashboard](docs/screenshots/dashboard.png) | ![Comparison](docs/screenshots/comparison.png) | ![Approval](docs/screenshots/approval.png) |
-
-| Vendor Portal | AI Quote Reader | Procurement Copilot |
-|---------------|-----------------|---------------------|
-| ![Portal](docs/screenshots/portal.png) | ![AI Reader](docs/screenshots/ai_reader.png) | ![Copilot](docs/screenshots/copilot.png) |
-
----
-
 ## 🤝 Contributing
 
 This project was built for a hackathon. For improvements or issues:
