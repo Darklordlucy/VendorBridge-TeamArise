@@ -1,0 +1,117 @@
+/* VendorBridge Website Portal CSS */
+
+:root {
+  --cyprus: #004643;
+  --sand: #F0EDE5;
+  --sand-dark: #E4DFD5;
+  --mint: #ABD1C6;
+  --white: #FFFFFF;
+  --success: #28A745;
+  --text-main: #0E1716;
+}
+
+body.vb-portal-body {
+  background-color: var(--sand);
+  color: var(--text-main);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+.vb-portal-container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 32px 16px;
+}
+
+/* Header visual */
+.vb-portal-header {
+  background-color: var(--cyprus);
+  color: var(--white);
+  padding: 20px 32px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  box-shadow: 0 4px 12px rgba(0, 70, 67, 0.15);
+}
+
+.vb-portal-header h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+/* Dropzone styling for AI Quote Reader */
+.vb-dropzone {
+  border: 2px dashed rgba(0, 70, 67, 0.25);
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 12px;
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 24px;
+}
+
+.vb-dropzone:hover, .vb-dropzone.dragover {
+  border-color: var(--cyprus);
+  background-color: rgba(255, 255, 255, 0.9);
+  transform: scale(1.01);
+}
+
+.vb-dropzone i {
+  font-size: 32px;
+  color: var(--cyprus);
+  margin-bottom: 12px;
+}
+
+/* Side-by-side Quotation Comparison styling */
+.comparison-table-wrapper {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 70, 67, 0.08);
+  background: var(--white);
+  margin-bottom: 32px;
+}
+
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.comparison-table th {
+  background-color: var(--cyprus);
+  color: var(--white);
+  padding: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.comparison-table td {
+  padding: 16px;
+  border-bottom: 1px solid rgba(0, 70, 67, 0.05);
+  font-size: 14px;
+}
+
+.comparison-best-price {
+  background-color: rgba(40, 167, 69, 0.12) !important;
+  color: var(--success);
+  font-weight: 600;
+  border-radius: 4px;
+}
+
+.comparison-badge-recom {
+  background-color: var(--cyprus);
+  color: var(--sand);
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  display: inline-block;
+}

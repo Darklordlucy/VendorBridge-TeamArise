@@ -1,0 +1,34 @@
+========================================================================
+                       DELHI HARDWARE HUB
+========================================================================
+Address: 22, G.B. Road, Hardware Market, Delhi - 110006
+Email: sales@delhihardware.com | Phone: +91-9876543210
+GSTIN: 07AAAAD1234F1Z1
+
+QUOTE TO:
+Acme Corporation
+Plot 45, Sector 18, Udyog Vihar, Gurugram, Haryana
+GSTIN: 06ACMCA1234E2Z9
+
+Quote Ref: QTE-2026-8942
+Date: June 5, 2026
+Validity: 30 Days
+Expected Delivery: 5 Days from PO Release
+
+------------------------------------------------------------------------
+S.No  Item Description                     Qty   Unit Price   Total (INR)
+------------------------------------------------------------------------
+1     Dell Latitude 3440 Laptop            50    42,000.00    21,00,000.00
+2     Ergonomic Standing Office Desk       10    15,000.00     1,50,000.00
+------------------------------------------------------------------------
+                                       SUBTOTAL:  INR 22,50,000.00
+                                     IGST (18%):  INR  4,05,000.00
+                                    GRAND TOTAL:  INR 26,55,000.00
+------------------------------------------------------------------------
+
+Payment Terms: 30 Days Net
+Delivery Terms: Free Door Delivery to Acme warehouse in Faridabad
+
+Authorized Signatory
+Rajesh Kumar, Proprietor
+========================================================================

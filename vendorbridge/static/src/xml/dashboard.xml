@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="vendorbridge.Dashboard" owl="1">
+        <div class="vb-dashboard">
+            <!-- Header bar -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="text-cyprus font-weight-bold">Hello, <t t-esc="state.user.name"/>!</h2>
+                    <p class="text-muted">Welcome to your procurement control center.</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="vb-btn vb-btn-primary" t-on-click="createNewRFQ">
+                        <i class="fas fa-plus"></i> New RFQ
+                    </button>
+                    <button class="vb-btn vb-btn-secondary" t-on-click="addNewVendor">
+                        <i class="fas fa-user-plus"></i> Add Vendor
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats grid -->
+            <div class="vb-stats-grid">
+                <div class="vb-card d-flex align-items-center gap-3">
+                    <div class="rounded-circle bg-success-light p-3 text-success">
+                        <i class="fas fa-file-invoice-dollar fa-2x"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small">Active RFQs</div>
+                        <div class="h3 font-weight-bold mb-0" t-esc="state.stats.active_rfqs"/>
+                    </div>
+                </div>
+
+                <div class="vb-card d-flex align-items-center gap-3">
+                    <div class="rounded-circle bg-warning-light p-3 text-warning">
+                        <i class="fas fa-clock fa-2x"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small">Pending Approvals</div>
+                        <div class="h3 font-weight-bold mb-0" t-esc="state.stats.pending_approvals"/>
+                    </div>
+                </div>
+
+                <div class="vb-card d-flex align-items-center gap-3">
+                    <div class="rounded-circle bg-info-light p-3 text-info">
+                        <i class="fas fa-chart-line fa-2x"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small">Total MTD Spend</div>
+                        <div class="h3 font-weight-bold mb-0" t-esc="state.stats.mtd_spend"/>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent activity section -->
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="vb-table-container p-3">
+                        <h4 class="mb-3 font-weight-bold">Recent Vendors</h4>
+                        <table class="vb-table">
+                            <thead>
+                                <tr>
+                                    <th>Vendor Name</th>
+                                    <th>Category</th>
+                                    <th>Payables</th>
+                                    <th>Rating</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="state.vendors" t-as="vendor" t-key="vendor.id">
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div class="avatar rounded-circle bg-secondary text-white p-1 text-center" style="width:28px; height:28px; line-height:20px; font-size:12px;" t-esc="vendor.name[0]"/>
+                                                <t t-esc="vendor.name"/>
+                                            </div>
+                                        </td>
+                                        <td t-esc="vendor.category"/>
+                                        <td class="font-weight-bold" t-esc="vendor.payables"/>
+                                        <td>
+                                            <span class="text-warning"><i class="fas fa-star"></i> <t t-esc="vendor.rating"/></span>
+                                        </td>
+                                        <td>
+                                            <span t-attf-class="badge bg-{{vendor.status === 'Active' ? 'success' : 'danger'}}" t-esc="vendor.status"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <!-- Activities -->
+                    <div class="vb-card">
+                        <h4 class="mb-3 font-weight-bold">System Log</h4>
+                        <div class="d-flex flex-column gap-3">
+                            <t t-foreach="state.logs" t-as="log" t-key="log.id">
+                                <div class="border-bottom pb-2">
+                                    <div class="small text-muted" t-esc="log.time"/>
+                                    <div t-esc="log.message"/>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

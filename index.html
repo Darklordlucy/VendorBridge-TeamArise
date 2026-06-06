@@ -1,0 +1,1583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VendorBridge — Procurement & Vendor Management ERP</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- FontAwesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cyprus: '#004643',
+            sand: '#F0EDE5',
+            sandDark: '#E4DFD5',
+            mint: '#ABD1C6',
+            coral: '#F9BC60',
+            darkText: '#001E1D',
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'Outfit', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom Styling & Glassmorphism Utilities */
+    body {
+      background-color: #F0EDE5;
+      color: #001E1D;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(0, 70, 67, 0.05);
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(0, 70, 67, 0.2);
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 70, 67, 0.4);
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 70, 67, 0.08);
+      box-shadow: 0 8px 32px 0 rgba(0, 15, 14, 0.04);
+    }
+    .recording-pulse {
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(249, 188, 96, 0.7); }
+      70% { box-shadow: 0 0 0 10px rgba(249, 188, 96, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(249, 188, 96, 0); }
+    }
+    .typing-dots span {
+      animation: blink 1.4s infinite both;
+      height: 6px;
+      width: 6px;
+      background-color: #004643;
+      border-radius: 50%;
+      display: inline-block;
+      margin: 0 2px;
+    }
+    .typing-dots span:nth-child(2) { animation-delay: .2s; }
+    .typing-dots span:nth-child(3) { animation-delay: .4s; }
+    @keyframes blink {
+      0% { opacity: .2; }
+      20% { opacity: 1; }
+      100% { opacity: .2; }
+    }
+  </style>
+</head>
+<body class="min-h-screen overflow-x-hidden antialiased flex flex-col font-sans">
+
+  <!-- Top Global Demo Banner for Hackathon Demo navigation -->
+  <div class="bg-cyprus text-sand px-4 py-2 flex flex-wrap justify-between items-center text-xs font-semibold border-b border-white/10 z-50">
+    <div class="flex items-center gap-2">
+      <span class="bg-coral text-cyprus px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider">Demo Control Panel</span>
+      <span>Use this bar to simulate different roles & walk through the 3-minute hackathon story:</span>
+    </div>
+    <div class="flex items-center gap-2 mt-1 sm:mt-0">
+      <button onclick="switchRole('officer')" id="btn-role-officer" class="px-3 py-1 rounded bg-white/10 hover:bg-white/20 transition-all text-white active-role border border-white/30">
+        <i class="fas fa-user-edit mr-1"></i> 1. Priya (Officer)
+      </button>
+      <button onclick="switchRole('vendor')" id="btn-role-vendor" class="px-3 py-1 rounded bg-white/10 hover:bg-white/20 transition-all text-white/70">
+        <i class="fas fa-store mr-1"></i> 2. Rajesh (Vendor Portal)
+      </button>
+      <button onclick="switchRole('manager')" id="btn-role-manager" class="px-3 py-1 rounded bg-white/10 hover:bg-white/20 transition-all text-white/70">
+        <i class="fas fa-user-check mr-1"></i> 3. Arun (Manager/Approver)
+      </button>
+      <button onclick="switchRole('admin')" id="btn-role-admin" class="px-3 py-1 rounded bg-white/10 hover:bg-white/20 transition-all text-white/70">
+        <i class="fas fa-user-shield mr-1"></i> Admin (All Access)
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Workspace Layout -->
+  <div class="flex-1 flex flex-row overflow-hidden relative">
+
+    <!-- 1. LEFT SIDEBAR (Standard ERP styling, matching Interoly color/layout style) -->
+    <aside id="sidebar-panel" class="w-64 bg-[#0a2322] text-white/80 flex flex-col justify-between shrink-0 transition-all duration-300 z-40">
+      <div class="flex flex-col overflow-y-auto custom-scrollbar p-5 gap-6">
+        <!-- Brand / Logo -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-mint flex items-center justify-center text-cyprus text-xl font-bold">
+              <i class="fas fa-handshake"></i>
+            </div>
+            <div>
+              <span class="text-white font-bold tracking-wide text-lg">VendorBridge</span>
+              <span class="block text-[10px] text-mint uppercase tracking-widest font-semibold mt-[-3px]">Procure ERP</span>
+            </div>
+          </div>
+          <button class="text-white/40 hover:text-white lg:hidden">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <!-- Menu Divisions -->
+        <div class="flex flex-col gap-6 mt-4">
+          <!-- Division: Main -->
+          <div>
+            <div class="text-[10px] uppercase font-bold text-white/30 tracking-widest px-3 mb-2">Main</div>
+            <nav class="flex flex-col gap-1">
+              <a href="#" onclick="showScreen('dashboard')" id="nav-dashboard" class="flex items-center justify-between px-3 py-2 rounded-lg bg-white/10 text-white font-medium text-sm transition-all">
+                <span class="flex items-center gap-3">
+                  <i class="fas fa-chart-pie w-4"></i> Dashboard
+                </span>
+              </a>
+              <a href="#" onclick="showScreen('rfq-create')" id="nav-rfq-create" class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-white/5 text-white/70 text-sm transition-all">
+                <span class="flex items-center gap-3">
+                  <i class="fas fa-file-medical w-4"></i> Create RFQ
+                </span>
+                <span class="bg-coral/20 text-coral text-[10px] px-1.5 py-0.5 rounded font-bold">Voice</span>
+              </a>
+              <a href="#" onclick="showScreen('comparison')" id="nav-comparison" class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-white/5 text-white/70 text-sm transition-all">
+                <span class="flex items-center gap-3">
+                  <i class="fas fa-balance-scale w-4"></i> Compare Quotes
+                </span>
+                <span id="badge-quotes-count" class="bg-mint text-cyprus text-[10px] px-1.5 py-0.5 rounded-full font-bold">3</span>
+              </a>
+              <a href="#" onclick="showScreen('approval')" id="nav-approval" class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-white/5 text-white/70 text-sm transition-all">
+                <span class="flex items-center gap-3">
+                  <i class="fas fa-check-circle w-4"></i> Approvals
+                </span>
+                <span id="badge-approval-alert" class="bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">2</span>
+              </a>
+              <a href="#" onclick="showScreen('po-view')" id="nav-po-view" class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-white/5 text-white/70 text-sm transition-all">
+                <span class="flex items-center gap-3">
+                  <i class="fas fa-file-invoice w-4"></i> PO & Invoices
+                </span>
+              </a>
+            </nav>
+          </div>
+
+          <!-- Division: Management -->
+          <div>
+            <div class="text-[10px] uppercase font-bold text-white/30 tracking-widest px-3 mb-2">Management</div>
+            <nav class="flex flex-col gap-1">
+              <a href="#" onclick="showScreen('vendors-list')" id="nav-vendors-list" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 text-white/70 text-sm transition-all">
+                <i class="fas fa-users w-4"></i> Vendors Master
+              </a>
+              <a href="#" onclick="showScreen('reports')" id="nav-reports" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 text-white/70 text-sm transition-all">
+                <i class="fas fa-chart-line w-4"></i> Analytics Reports
+              </a>
+              <a href="#" onclick="alert('Logs are immutable under audit standards. Accessing global activity feed...')" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 text-white/70 text-sm transition-all">
+                <i class="fas fa-history w-4"></i> Audit Trail
+              </a>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+      <!-- User footer inside sidebar -->
+      <div class="p-4 border-t border-white/5 bg-black/10 flex items-center gap-3">
+        <div id="user-avatar" class="w-9 h-9 rounded-full bg-mint text-cyprus font-bold flex items-center justify-center">
+          P
+        </div>
+        <div class="overflow-hidden">
+          <span id="user-display-name" class="block text-sm font-semibold text-white truncate">Priya Sharma</span>
+          <span id="user-display-role" class="block text-[10px] text-white/50 truncate">Procurement Officer</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 2. MAIN CONTENT AREA -->
+    <main class="flex-1 flex flex-col overflow-y-auto custom-scrollbar p-6 bg-sand relative">
+
+      <!-- Header Banner / Topbar -->
+      <header class="flex justify-between items-center mb-6 bg-white/70 backdrop-blur px-6 py-4 rounded-2xl border border-cyprus/5 shadow-sm">
+        <div class="flex items-center gap-4">
+          <button onclick="toggleSidebar()" class="text-cyprus hover:bg-cyprus/5 p-2 rounded-lg lg:hidden">
+            <i class="fas fa-bars text-xl"></i>
+          </button>
+          <div>
+            <h1 class="text-lg font-bold text-cyprus flex items-center gap-2">
+              <span id="header-greeting-icon"><i class="fas fa-sun text-yellow-500"></i></span>
+              <span id="header-greeting-text">Hello, Priya Sharma!</span>
+            </h1>
+            <p class="text-xs text-darkText/60">Procurement & Vendor ERP Workspace</p>
+          </div>
+        </div>
+        <!-- Right search and quick switches -->
+        <div class="flex items-center gap-4">
+          <div class="relative hidden sm:block">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-cyprus/40">
+              <i class="fas fa-search"></i>
+            </span>
+            <input type="text" placeholder="Search RFQs, vendors, orders..." class="pl-9 pr-4 py-1.5 bg-sandDark/40 border border-cyprus/10 rounded-xl text-xs text-cyprus focus:outline-none focus:border-cyprus/30 w-64 transition-all">
+          </div>
+          <button onclick="alert('Notification Center: 3 quotes received, 1 PO awaiting approval.')" class="w-9 h-9 rounded-xl bg-sandDark/40 flex items-center justify-center text-cyprus hover:bg-sandDark/80 transition-all relative">
+            <i class="fas fa-bell"></i>
+            <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
+          </button>
+        </div>
+      </header>
+
+      <!-- SCREEN CONTENT WRAPPER -->
+      <div class="flex-1">
+
+        <!-- ==================== SCREEN: DASHBOARD ==================== -->
+        <section id="screen-dashboard" class="screen-view">
+          <h2 class="text-xl font-bold text-cyprus mb-4">Procurement Command Center</h2>
+          
+          <!-- Metric Cards (Matching Interoly design structure) -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-2xl border border-cyprus/5 shadow-sm flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-green-100 text-green-700 flex items-center justify-center text-xl">
+                <i class="fas fa-store-slash"></i>
+              </div>
+              <div class="flex-1">
+                <span class="text-xs text-darkText/60 block font-semibold">New Vendors</span>
+                <div class="flex items-baseline gap-2 mt-0.5">
+                  <span class="text-2xl font-bold text-cyprus">13,535.00</span>
+                  <span class="text-xs text-green-600 font-semibold flex items-center"><i class="fas fa-arrow-up mr-0.5"></i> 40%</span>
+                </div>
+                <span class="text-[10px] text-darkText/40">Registered last month</span>
+              </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-2xl border border-cyprus/5 shadow-sm flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-xl">
+                <i class="fas fa-store"></i>
+              </div>
+              <div class="flex-1">
+                <span class="text-xs text-darkText/60 block font-semibold">All Vendors</span>
+                <div class="flex items-baseline gap-2 mt-0.5">
+                  <span class="text-2xl font-bold text-cyprus">43,123.10</span>
+                  <span class="text-xs text-green-600 font-semibold flex items-center"><i class="fas fa-arrow-up mr-0.5"></i> 34%</span>
+                </div>
+                <span class="text-[10px] text-darkText/40">Total active in ERP</span>
+              </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl border border-cyprus/5 shadow-sm flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center text-xl">
+                <i class="fas fa-shopping-bag"></i>
+              </div>
+              <div class="flex-1">
+                <span class="text-xs text-darkText/60 block font-semibold">Active Vendors</span>
+                <div class="flex items-baseline gap-2 mt-0.5">
+                  <span class="text-2xl font-bold text-cyprus">08,432.09</span>
+                  <span class="text-xs text-red-500 font-semibold flex items-center"><i class="fas fa-arrow-down mr-0.5"></i> 12%</span>
+                </div>
+                <span class="text-[10px] text-darkText/40">With active procurement</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Grid: Recent Activity & Quick Actions -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left 2 Cols: Vendors List -->
+            <div class="lg:col-span-2 bg-white rounded-2xl border border-cyprus/5 shadow-sm p-6 overflow-hidden flex flex-col">
+              <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3 mb-4">
+                <h3 class="text-sm font-bold text-cyprus">Active Vendors Directory</h3>
+                <div class="relative w-full sm:w-48">
+                  <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-cyprus/40 text-xs">
+                    <i class="fas fa-search"></i>
+                  </span>
+                  <input type="text" id="vendor-search" onkeyup="filterVendors()" placeholder="Search vendors..." class="pl-8 pr-4 py-1.5 bg-sand/60 border border-cyprus/5 rounded-xl text-xs text-cyprus focus:outline-none w-full">
+                </div>
+              </div>
+
+              <div class="overflow-x-auto custom-scrollbar">
+                <table class="w-full text-left border-collapse text-xs">
+                  <thead>
+                    <tr class="bg-sand/40 text-cyprus/70 font-semibold uppercase tracking-wider border-b border-cyprus/5">
+                      <th class="py-3 px-4 w-8"><input type="checkbox" class="rounded border-cyprus/10"></th>
+                      <th class="py-3 px-4">Vendors Name</th>
+                      <th class="py-3 px-4">Company Name</th>
+                      <th class="py-3 px-4">Payables</th>
+                      <th class="py-3 px-4">Email</th>
+                    </tr>
+                  </thead>
+                  <tbody id="vendors-tbody">
+                    <tr class="border-b border-cyprus/5 hover:bg-sand/20 transition-all">
+                      <td class="py-3 px-4"><input type="checkbox" class="rounded border-cyprus/10"></td>
+                      <td class="py-3 px-4 flex items-center gap-2">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100" class="w-7 h-7 rounded-full object-cover border border-cyprus/10">
+                        <span class="font-medium text-cyprus">Tahsan Khan</span>
+                      </td>
+                      <td class="py-3 px-4 text-darkText/70">Uistore.org</td>
+                      <td class="py-3 px-4 font-bold text-green-600">$635</td>
+                      <td class="py-3 px-4 text-darkText/60">tahsankhan380@gmail.com</td>
+                    </tr>
+                    <tr class="border-b border-cyprus/5 hover:bg-sand/20 transition-all">
+                      <td class="py-3 px-4"><input type="checkbox" class="rounded border-cyprus/10"></td>
+                      <td class="py-3 px-4 flex items-center gap-2">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100" class="w-7 h-7 rounded-full object-cover border border-cyprus/10">
+                        <span class="font-medium text-cyprus">Anwar Hussen</span>
+                      </td>
+                      <td class="py-3 px-4 text-darkText/70">Uistore.org</td>
+                      <td class="py-3 px-4 font-bold text-red-500">$748</td>
+                      <td class="py-3 px-4 text-darkText/60">anwarhussen247@gmail.com</td>
+                    </tr>
+                    <tr class="border-b border-cyprus/5 hover:bg-sand/20 transition-all">
+                      <td class="py-3 px-4"><input type="checkbox" class="rounded border-cyprus/10"></td>
+                      <td class="py-3 px-4 flex items-center gap-2">
+                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=100" class="w-7 h-7 rounded-full object-cover border border-cyprus/10">
+                        <span class="font-medium text-cyprus">Hasan Khan</span>
+                      </td>
+                      <td class="py-3 px-4 text-darkText/70">Uistore.org</td>
+                      <td class="py-3 px-4 font-bold text-yellow-600">$759</td>
+                      <td class="py-3 px-4 text-darkText/60">hasankhan325@gmail.com</td>
+                    </tr>
+                    <tr class="border-b border-cyprus/5 hover:bg-sand/20 transition-all">
+                      <td class="py-3 px-4"><input type="checkbox" class="rounded border-cyprus/10"></td>
+                      <td class="py-3 px-4 flex items-center gap-2">
+                        <img src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&q=80&w=100" class="w-7 h-7 rounded-full object-cover border border-cyprus/10">
+                        <span class="font-medium text-cyprus">Jaman Khan</span>
+                      </td>
+                      <td class="py-3 px-4 text-darkText/70">Uistore.org</td>
+                      <td class="py-3 px-4 font-bold text-blue-600">$829</td>
+                      <td class="py-3 px-4 text-darkText/60">jamankhan435@gmail.com</td>
+                    </tr>
+                    <tr class="border-b border-cyprus/5 hover:bg-sand/20 transition-all">
+                      <td class="py-3 px-4"><input type="checkbox" class="rounded border-cyprus/10"></td>
+                      <td class="py-3 px-4 flex items-center gap-2">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=100" class="w-7 h-7 rounded-full object-cover border border-cyprus/10">
+                        <span class="font-medium text-cyprus">Herry Brooks</span>
+                      </td>
+                      <td class="py-3 px-4 text-darkText/70">Uistore.org</td>
+                      <td class="py-3 px-4 font-bold text-purple-600">$213</td>
+                      <td class="py-3 px-4 text-darkText/60">herrybrooks234@gmail.com</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Right 1 Col: Quick Actions & Recents -->
+            <div class="flex flex-col gap-6">
+              <!-- Actions -->
+              <div class="bg-white rounded-2xl border border-cyprus/5 shadow-sm p-6">
+                <h3 class="text-sm font-bold text-cyprus mb-4">Quick Procurement Tools</h3>
+                <div class="flex flex-col gap-3">
+                  <button onclick="showScreen('rfq-create')" class="w-full py-2.5 bg-cyprus text-sand hover:text-white rounded-xl text-xs font-semibold hover:bg-[#002d2b] transition-all flex items-center justify-center gap-2">
+                    <i class="fas fa-plus-circle"></i> Create New RFQ (Voice Active)
+                  </button>
+                  <button onclick="showScreen('comparison')" class="w-full py-2.5 bg-mint text-cyprus rounded-xl text-xs font-semibold hover:bg-mint/80 transition-all flex items-center justify-center gap-2">
+                    <i class="fas fa-balance-scale"></i> Compare Active Quotes
+                  </button>
+                  <button onclick="switchRole('vendor')" class="w-full py-2.5 bg-sandDark text-cyprus rounded-xl text-xs font-semibold hover:bg-sandDark/75 transition-all flex items-center justify-center gap-2">
+                    <i class="fas fa-link"></i> Launch Vendor Portal Demo
+                  </button>
+                </div>
+              </div>
+
+              <!-- Activity Logs (Audit Trail) -->
+              <div class="bg-white rounded-2xl border border-cyprus/5 shadow-sm p-6">
+                <div class="flex justify-between items-center mb-3">
+                  <h3 class="text-xs font-bold text-cyprus">System Audit Trail</h3>
+                  <i class="fas fa-shield-alt text-xs text-cyprus/40"></i>
+                </div>
+                <div class="flex flex-col gap-3 max-h-48 overflow-y-auto custom-scrollbar pr-1">
+                  <div class="border-l-2 border-green-500 pl-3 py-0.5">
+                    <span class="block text-[10px] text-darkText/40">11:45 AM - Priya S.</span>
+                    <span class="text-[11px] font-medium text-darkText">Published RFQ-2026-003 to 3 Vendors</span>
+                  </div>
+                  <div class="border-l-2 border-blue-500 pl-3 py-0.5">
+                    <span class="block text-[10px] text-darkText/40">11:10 AM - Rajesh K.</span>
+                    <span class="text-[11px] font-medium text-darkText">Vendor quotation received from Delhi Hardware Hub</span>
+                  </div>
+                  <div class="border-l-2 border-yellow-500 pl-3 py-0.5">
+                    <span class="block text-[10px] text-darkText/40">10:30 AM - Priya S.</span>
+                    <span class="text-[11px] font-medium text-darkText">Created Draft RFQ-2026-003 via Voice Command</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ==================== SCREEN: RFQ CREATE ==================== -->
+        <section id="screen-rfq-create" class="screen-view hidden">
+          <div class="flex justify-between items-center mb-4">
+            <div>
+              <h2 class="text-xl font-bold text-cyprus">Create Request for Quotation</h2>
+              <p class="text-xs text-darkText/60">Generate and distribute purchase specifications to select suppliers.</p>
+            </div>
+            <!-- Voice Activator Badge -->
+            <button id="btn-voice-rfq" onclick="toggleVoiceRecognition()" class="px-4 py-2 bg-coral text-cyprus font-semibold rounded-xl text-xs flex items-center gap-2 hover:bg-coral/80 transition-all">
+              <i class="fas fa-microphone"></i> <span>Voice-to-RFQ</span>
+            </button>
+          </div>
+
+          <!-- Alert for Voice Recognition output -->
+          <div id="voice-toast" class="hidden bg-white border border-coral/30 rounded-xl p-3 mb-4 shadow-sm flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-coral/20 flex items-center justify-center text-coral recording-pulse">
+                <i class="fas fa-microphone text-sm"></i>
+              </div>
+              <div class="text-xs">
+                <span class="font-bold text-cyprus block">Listening to Voice Command...</span>
+                <span id="voice-transcript-text" class="text-darkText/70 italic">Speak now. Try: "Create RFQ for 50 Dell Laptops, deadline June 15th"</span>
+              </div>
+            </div>
+            <button onclick="closeVoiceToast()" class="text-cyprus/40 hover:text-cyprus"><i class="fas fa-times text-xs"></i></button>
+          </div>
+
+          <!-- RFQ Form Layout -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left Form Fields -->
+            <div class="lg:col-span-2 bg-white rounded-2xl border border-cyprus/5 shadow-sm p-6 flex flex-col gap-4">
+              <!-- Section 1: Header Details -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold text-cyprus mb-1.5 uppercase">RFQ Reference / Title</label>
+                  <input type="text" id="rfq-title" placeholder="e.g. IT Hardware Procurement Q2" class="w-full px-3 py-2 bg-sand/30 border border-cyprus/10 rounded-xl text-xs focus:outline-none focus:border-cyprus">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-cyprus mb-1.5 uppercase">Submission Deadline</label>
+                  <input type="date" id="rfq-deadline" class="w-full px-3 py-2 bg-sand/30 border border-cyprus/10 rounded-xl text-xs focus:outline-none focus:border-cyprus">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-cyprus mb-1.5 uppercase">Description & Specifications</label>
+                <textarea id="rfq-desc" rows="3" placeholder="Enter general terms, delivery requirements, or vendor instructions..." class="w-full px-3 py-2 bg-sand/30 border border-cyprus/10 rounded-xl text-xs focus:outline-none focus:border-cyprus"></textarea>
+              </div>
+
+              <!-- Section 2: Line Items -->
+              <div>
+                <div class="flex justify-between items-center mb-2">
+                  <h3 class="text-xs font-bold text-cyprus uppercase">Line Items Table</h3>
+                  <button onclick="addRFQLine()" class="text-xs font-semibold text-cyprus hover:text-cyprus/80 flex items-center gap-1"><i class="fas fa-plus-circle"></i> Add Row</button>
+                </div>
+                <div class="overflow-x-auto">
+                  <table class="w-full text-xs text-left border border-cyprus/5 rounded-xl overflow-hidden">
+                    <thead class="bg-sand/30 text-cyprus font-semibold uppercase">
+                      <tr>
+                        <th class="py-2.5 px-3">Item Name / Description</th>
+                        <th class="py-2.5 px-3 w-24">Quantity</th>
+                        <th class="py-2.5 px-3 w-32">UoM</th>
+                        <th class="py-2.5 px-3 w-12 text-center"></th>
+                      </tr>
+                    </thead>
+                    <tbody id="rfq-lines-tbody">
+                      <tr class="border-b border-cyprus/5">
+                        <td class="py-2 px-3"><input type="text" placeholder="e.g. Dell Latitude 3440 Laptop" class="w-full py-1 bg-transparent border-b border-transparent focus:border-cyprus/20 focus:outline-none item-name-field"></td>
+                        <td class="py-2 px-3"><input type="number" placeholder="50" class="w-full py-1 bg-transparent border-b border-transparent focus:border-cyprus/20 focus:outline-none item-qty-field"></td>
+                        <td class="py-2 px-3">
+                          <select class="w-full py-1 bg-transparent border-b border-transparent focus:border-cyprus/20 focus:outline-none">
+                            <option>Units</option>
+                            <option>Boxes</option>
+                            <option>Sets</option>
+                          </select>
+                        </td>
+                        <td class="py-2 px-3 text-center"><button onclick="deleteRFQLine(this)" class="text-red-500 hover:text-red-700"><i class="fas fa-trash-alt"></i></button></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right vendor selection & publish -->
+            <div class="flex flex-col gap-6">
+              <div class="bg-white rounded-2xl border border-cyprus/5 shadow-sm p-6 flex flex-col gap-4">
+                <h3 class="text-xs font-bold text-cyprus uppercase">Assign Vendors</h3>
+                <div class="flex flex-col gap-2 max-h-56 overflow-y-auto custom-scrollbar pr-1">
+                  <label class="flex items-center gap-3 p-2 bg-sand/30 rounded-xl cursor-pointer hover:bg-sand/60">
+                    <input type="checkbox" value="Delhi Hardware Hub" checked class="rounded border-cyprus/10 text-cyprus focus:ring-cyprus">
+                    <div>
+                      <span class="block text-xs font-bold text-cyprus">Delhi Hardware Hub</span>
+                      <span class="block text-[10px] text-darkText/60">GST: 07AAAAD1234F1Z1</span>
+                    </div>
+                  </label>
+                  <label class="flex items-center gap-3 p-2 bg-sand/30 rounded-xl cursor-pointer hover:bg-sand/60">
+                    <input type="checkbox" value="TechSolutions India" checked class="rounded border-cyprus/10 text-cyprus focus:ring-cyprus">
+                    <div>
+                      <span class="block text-xs font-bold text-cyprus">TechSolutions India</span>
+                      <span class="block text-[10px] text-darkText/60">GST: 09BBBBD5678K2Z5</span>
+                    </div>
+                  </label>
+                  <label class="flex items-center gap-3 p-2 bg-sand/30 rounded-xl cursor-pointer hover:bg-sand/60">
+                    <input type="checkbox" value="Global Furniture Hub" checked class="rounded border-cyprus/10 text-cyprus focus:ring-cyprus">
+                    <div>
+                      <span class="block text-xs font-bold text-cyprus">Global Furniture Hub</span>
+                      <span class="block text-[10px] text-darkText/60">GST: 08CCCCD9101M3Z0</span>
+                    </div>
+                  </label>
+                </div>
+
+                <div class="pt-4 border-t border-cyprus/5 flex flex-col gap-3">
+                  <button onclick="publishRFQ()" class="w-full py-2.5 bg-cyprus text-sand hover:text-white rounded-xl text-xs font-bold hover:bg-[#002d2b] transition-all flex items-center justify-center gap-2">
+                    <i class="fas fa-paper-plane"></i> Publish & Send Magic Links
+                  </button>
+                  <button onclick="alert('Draft auto-saved successfully. Next backup in 30s.')" class="w-full py-2.5 bg-sand/60 text-cyprus rounded-xl text-xs font-semibold hover:bg-sand/90 transition-all">
+                    Save as Draft
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ==================== SCREEN: COMPARISON ==================== -->
+        <section id="screen-comparison" class="screen-view hidden">
+          <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-6">
+            <div>
+              <h2 class="text-xl font-bold text-cyprus">Quotation Comparison Grid</h2>
+              <p class="text-xs text-darkText/60">Compare submissions across vendors. Lowest pricing per item is automatically highlighted.</p>
+            </div>
+            <!-- Action buttons -->
+            <button onclick="sendForApproval()" class="px-4 py-2 bg-cyprus text-sand hover:text-white font-bold rounded-xl text-xs flex items-center gap-2 hover:bg-[#002d2b] transition-all self-start sm:self-auto">
+              <i class="fas fa-shield-alt"></i> Send for Manager Approval
+            </button>
+          </div>
+
+          <!-- AI recommendation Box -->
+          <div class="bg-white/80 border border-cyprus/10 rounded-2xl p-5 mb-6 shadow-sm flex flex-col sm:flex-row items-start gap-4">
+            <div class="w-10 h-10 rounded-xl bg-cyprus text-sand flex items-center justify-center text-lg shrink-0">
+              <i class="fas fa-robot"></i>
+            </div>
+            <div>
+              <span class="text-xs uppercase font-bold text-cyprus tracking-wider flex items-center gap-1.5">
+                Procurement AI Copilot Suggestion
+                <span class="bg-mint text-cyprus text-[9px] px-1.5 py-0.5 rounded font-bold uppercase">Optimized</span>
+              </span>
+              <p class="text-xs font-medium text-darkText/80 mt-1 leading-relaxed">
+                Recommended: <strong class="text-cyprus">Delhi Hardware Hub</strong>. They present the lowest total contract value at <strong>₹22,50,000.00</strong> (tax excluded) and meet your required 7-day delivery timeline with an outstanding historic supplier score of <strong>4.8★</strong>.
+              </p>
+            </div>
+          </div>
+
+          <!-- Grid layout -->
+          <div class="bg-white rounded-2xl border border-cyprus/5 shadow-sm p-6 overflow-hidden">
+            <div class="overflow-x-auto custom-scrollbar">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr class="bg-sand/30 text-cyprus font-semibold border-b border-cyprus/10">
+                    <th class="py-3.5 px-4 w-64">Item Specifications</th>
+                    <th class="py-3.5 px-4 w-20 text-center">Qty</th>
+                    <th class="py-3.5 px-4 bg-cyprus/5 text-cyprus font-bold">Delhi Hardware (Recommended)</th>
+                    <th class="py-3.5 px-4">TechSolutions India</th>
+                    <th class="py-3.5 px-4">Global Furniture Hub</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border-b border-cyprus/5">
+                    <td class="py-4 px-4 font-medium text-cyprus">Dell Latitude 3440 Laptop</td>
+                    <td class="py-4 px-4 text-center">50</td>
+                    <!-- Delhi Hardware Price (Lowest highlighted in light green) -->
+                    <td class="py-4 px-4 bg-green-50 text-green-700 font-bold border-x border-green-200">
+                      ₹42,000.00 <span class="block text-[10px] font-normal text-darkText/50">Total: ₹21,00,000</span>
+                    </td>
+                    <td class="py-4 px-4 text-darkText/70">
+                      ₹44,500.00 <span class="block text-[10px] text-darkText/50">Total: ₹22,25,000</span>
+                    </td>
+                    <td class="py-4 px-4 text-darkText/40 italic">
+                      No Quote <span class="block text-[10px]">--</span>
+                    </td>
+                  </tr>
+
+                  <tr class="border-b border-cyprus/5">
+                    <td class="py-4 px-4 font-medium text-cyprus">Ergonomic Standing Office Desk</td>
+                    <td class="py-4 px-4 text-center">10</td>
+                    <td class="py-4 px-4 bg-cyprus/5 text-darkText/70 border-x border-cyprus/5">
+                      ₹15,000.00 <span class="block text-[10px] text-darkText/50">Total: ₹1,50,000</span>
+                    </td>
+                    <td class="py-4 px-4 text-darkText/70">
+                      ₹16,200.00 <span class="block text-[10px] text-darkText/50">Total: ₹1,62,000</span>
+                    </td>
+                    <!-- Global Furniture Price (Lowest) -->
+                    <td class="py-4 px-4 bg-green-50 text-green-700 font-bold border-x border-green-200">
+                      ₹13,800.00 <span class="block text-[10px] font-normal text-darkText/50">Total: ₹1,38,000</span>
+                    </td>
+                  </tr>
+
+                  <tr class="bg-sand/20 font-bold text-cyprus">
+                    <td class="py-4 px-4">Summary Summary</td>
+                    <td class="py-4 px-4"></td>
+                    <td class="py-4 px-4 bg-cyprus/10 border-x border-cyprus/10 text-cyprus">
+                      Total: ₹22,50,000
+                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 5 Days | 4.8★</span>
+                    </td>
+                    <td class="py-4 px-4">
+                      Total: ₹23,87,000
+                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 8 Days | 4.2★</span>
+                    </td>
+                    <td class="py-4 px-4">
+                      Total: ₹1,38,000 (Partial)
+                      <span class="block text-[10px] text-darkText/60 font-semibold">Delivery: 12 Days | 3.9★</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ==================== SCREEN: APPROVAL WORKFLOW ==================== -->
+        <section id="screen-approval" class="screen-view hidden">
+          <h2 class="text-xl font-bold text-cyprus mb-4">Manager Review & Workflow Stepper</h2>
+
+          <!-- Stepper Visual Component -->
+          <div class="bg-white rounded-2xl border border-cyprus/5 shadow-sm p-6 mb-6">
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-4 relative">
+              <!-- Connector line -->
+              <div class="absolute top-4 left-16 right-16 h-0.5 bg-sandDark hidden sm:block -z-0"></div>
+              <div class="absolute top-4 left-16 w-1/2 h-0.5 bg-cyprus hidden sm:block -z-0"></div>
+              
+              <div class="flex items-center gap-3 z-10 bg-white sm:px-3">
+                <div class="w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center text-xs font-bold">1</div>
+                <div class="text-xs">
+                  <strong class="block text-cyprus">RFQ Created</strong>
+                  <span class="text-[10px] text-darkText/60">Priya S. - 10:30 AM</span>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-3 z-10 bg-white sm:px-3">
+                <div class="w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center text-xs font-bold">2</div>
+                <div class="text-xs">
+                  <strong class="block text-cyprus">Quotes Received</strong>
+                  <span class="text-[10px] text-darkText/60">3 Vendors - 11:10 AM</span>
+                </div>
+              </div>
+
+              <div id="step-under-review" class="flex items-center gap-3 z-10 bg-white sm:px-3">
+                <div class="w-8 h-8 rounded-full bg-cyprus text-sand flex items-center justify-center text-xs font-bold animate-pulse">3</div>
+                <div class="text-xs">
+                  <strong class="block text-cyprus">Under Review</strong>
+                  <span class="text-[10px] text-darkText/60">Arun M. - Pending</span>
+                </div>
+              </div>
+
+              <div id="step-po-issued" class="flex items-center gap-3 z-10 bg-white/50 sm:px-3 opacity-50">
+                <div class="w-8 h-8 rounded-full bg-sandDark text-darkText/50 flex items-center justify-center text-xs font-bold">4</div>
+                <div class="text-xs">
+                  <strong class="block text-darkText/50">PO Issued</strong>
+                  <span class="text-[10px]">Awaiting Approval</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Comparison info and Review form -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 bg-white rounded-2xl border border-cyprus/5 shadow-sm p-6 flex flex-col gap-4">
+              <h3 class="text-sm font-bold text-cyprus">Reviewing: RFQ-2026-003 IT Equipment</h3>
+              <div class="text-xs text-darkText/70 flex flex-col gap-2">
+                <p><strong>Department:</strong> Engineering & IT Support Services</p>
+                <p><strong>Proposed Vendor Contract:</strong> Delhi Hardware Hub</p>
+                <p><strong>Contract Total Value:</strong> ₹22,50,000.00 (GST Excluded)</p>
+                <p><strong>Manager Authority Level:</strong> Threshold level 1 (Arun M. up to ₹5,00,000, requires Group Head secondary signoff if over ₹50,000? YES, status: High Priority Review flag).</p>
+              </div>
+
+              <!-- Stepper Action Block -->
+              <div class="pt-4 border-t border-cyprus/5 flex flex-col gap-3">
+                <label class="block text-xs font-bold text-cyprus uppercase mb-1">Approval Remarks / Remarks</label>
+                <textarea id="approval-remarks" rows="3" placeholder="Enter notes here. Mandatory if rejecting..." class="w-full px-3 py-2 bg-sand/30 border border-cyprus/10 rounded-xl text-xs focus:outline-none focus:border-cyprus"></textarea>
+                
+                <div class="flex gap-3 mt-2">
+                  <button onclick="approveWorkflow()" class="flex-1 py-2.5 bg-green-700 text-white rounded-xl text-xs font-bold hover:bg-green-800 transition-all flex items-center justify-center gap-2">
+                    <i class="fas fa-check"></i> Approve & Generate PO
+                  </button>
+                  <button onclick="rejectWorkflow()" class="py-2.5 px-6 bg-red-600 text-white rounded-xl text-xs font-bold hover:bg-red-700 transition-all flex items-center justify-center gap-2">
+                    <i class="fas fa-times"></i> Reject
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Audit Trail / History -->
+            <div class="bg-white rounded-2xl border border-cyprus/5 shadow-sm p-6">
+              <h3 class="text-xs font-bold text-cyprus uppercase mb-4">Approval Sign-off Status</h3>
+              <div class="flex flex-col gap-4">
+                <div class="flex gap-3">
+                  <div class="w-6 h-6 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-xs shrink-0"><i class="fas fa-check"></i></div>
+                  <div class="text-xs">
+                    <strong class="block text-cyprus">Priya Sharma (Officer)</strong>
+                    <span class="text-[10px] text-darkText/60">Submitted for review: June 6, 11:45 AM</span>
+                  </div>
+                </div>
+                <div class="flex gap-3">
+                  <div class="w-6 h-6 rounded-full bg-yellow-100 text-yellow-700 flex items-center justify-center text-xs shrink-0"><i class="fas fa-clock"></i></div>
+                  <div class="text-xs">
+                    <strong class="block text-cyprus">Manager Arun (Approver)</strong>
+                    <span id="arun-sign-status" class="text-[10px] text-yellow-600 font-semibold">Pending review...</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ==================== SCREEN: PO / INVOICE ==================== -->
+        <section id="screen-po-view" class="screen-view hidden">
+          <div class="flex justify-between items-center mb-6">
+            <div>
+              <h2 class="text-xl font-bold text-cyprus">Purchase Order & Invoicing</h2>
+              <p class="text-xs text-darkText/60">Generate formal vendor documents and calculate invoice receipts.</p>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="alert('Printing document preview...')" class="px-3 py-1.5 bg-sandDark text-cyprus rounded-xl text-xs font-semibold hover:bg-sandDark/75 transition-all">
+                <i class="fas fa-print mr-1"></i> Print PO
+              </button>
+              <button id="btn-email-po" onclick="sendInvoiceEmail()" class="px-3 py-1.5 bg-cyprus text-sand hover:text-white rounded-xl text-xs font-semibold hover:bg-[#002d2b] transition-all">
+                <i class="fas fa-envelope mr-1"></i> Send PO Email
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left 2 Cols: Document layout -->
+            <div class="lg:col-span-2 bg-white rounded-2xl border border-cyprus/5 shadow-md p-8 text-xs relative overflow-hidden">
+              <!-- Confirmed Watermark -->
+              <div id="confirmed-watermark" class="hidden absolute top-12 right-12 border-4 border-green-600 text-green-600 font-bold text-xl uppercase tracking-widest px-4 py-2 rotate-12 rounded opacity-80">
+                Approved
+              </div>
+
+              <!-- Header Info -->
+              <div class="flex justify-between border-b border-cyprus/10 pb-6 mb-6">
+                <div>
+                  <h3 class="text-base font-bold text-cyprus uppercase">Acme Corporation</h3>
+                  <p class="text-darkText/60">Plot 45, Sector 18, Udyog Vihar</p>
+                  <p class="text-darkText/60">Gurugram, Haryana - 122015</p>
+                  <p class="text-darkText/60">GSTIN: 06ACMCA1234E2Z9</p>
+                </div>
+                <div class="text-right">
+                  <h3 class="text-sm font-bold text-cyprus">PURCHASE ORDER</h3>
+                  <p class="text-xs font-bold text-coral mt-1" id="po-doc-number">PO-2026-0003</p>
+                  <p class="text-darkText/60 mt-1">Date: June 6, 2026</p>
+                  <p class="text-darkText/60">Status: <span id="po-doc-status" class="font-bold text-yellow-600 uppercase">Draft</span></p>
+                </div>
+              </div>
+
+              <!-- Vendor & Shipping -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 text-xs">
+                <div>
+                  <h4 class="font-bold text-cyprus uppercase mb-1">Vendor Details</h4>
+                  <p class="font-semibold text-darkText">Delhi Hardware Hub</p>
+                  <p class="text-darkText/60">22, G.B. Road, Hardware Market</p>
+                  <p class="text-darkText/60">Delhi - 110006</p>
+                  <p class="text-darkText/60">GSTIN: 07AAAAD1234F1Z1</p>
+                </div>
+                <div>
+                  <h4 class="font-bold text-cyprus uppercase mb-1">Ship To</h4>
+                  <p class="font-semibold text-darkText">Acme Corp warehouse</p>
+                  <p class="text-darkText/60">Plot 12, Logistics Park</p>
+                  <p class="text-darkText/60">Faridabad, Haryana</p>
+                  <p class="text-darkText/60">Attention: Stores Manager</p>
+                </div>
+              </div>
+
+              <!-- Line Items -->
+              <table class="w-full text-left border-collapse mb-6 text-[11px]">
+                <thead>
+                  <tr class="bg-sand/30 text-cyprus font-semibold border-b border-cyprus/10">
+                    <th class="py-2.5 px-3">Item Description</th>
+                    <th class="py-2.5 px-3 text-right">Qty</th>
+                    <th class="py-2.5 px-3 text-right">Unit Price</th>
+                    <th class="py-2.5 px-3 text-right">Amount (₹)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border-b border-cyprus/5">
+                    <td class="py-3 px-3">Dell Latitude 3440 Laptop</td>
+                    <td class="py-3 px-3 text-right">50</td>
+                    <td class="py-3 px-3 text-right">₹42,000.00</td>
+                    <td class="py-3 px-3 text-right">₹21,00,000.00</td>
+                  </tr>
+                  <tr class="border-b border-cyprus/5">
+                    <td class="py-3 px-3">Ergonomic Standing Office Desk</td>
+                    <td class="py-3 px-3 text-right">10</td>
+                    <td class="py-3 px-3 text-right">₹15,000.00</td>
+                    <td class="py-3 px-3 text-right">₹1,50,000.00</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <!-- Totals -->
+              <div class="flex justify-end text-xs">
+                <div class="w-64 flex flex-col gap-2">
+                  <div class="flex justify-between text-darkText/70">
+                    <span>Subtotal:</span>
+                    <span>₹22,50,000.00</span>
+                  </div>
+                  <div class="flex justify-between text-darkText/70">
+                    <span>IGST (18%):</span>
+                    <span>₹4,05,000.00</span>
+                  </div>
+                  <div class="flex justify-between border-t border-cyprus/10 pt-2 font-bold text-cyprus text-sm">
+                    <span>Grand Total:</span>
+                    <span>₹26,55,000.00</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right details card -->
+            <div class="bg-white rounded-2xl border border-cyprus/5 shadow-sm p-6 flex flex-col gap-4">
+              <h3 class="text-xs font-bold text-cyprus uppercase">Purchase Invoice</h3>
+              <p class="text-xs text-darkText/70">Once the PO is approved, you can generate a vendor invoice to register the bill in Accounting.</p>
+              
+              <div class="pt-2 flex flex-col gap-3">
+                <button id="btn-gen-invoice" onclick="generateInvoice()" disabled class="w-full py-2.5 bg-cyprus/40 text-sand cursor-not-allowed rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2">
+                  <i class="fas fa-file-invoice-dollar"></i> Generate Accounting Invoice
+                </button>
+                <div class="text-[10px] text-red-500 font-semibold text-center" id="invoice-warning-msg">
+                  <i class="fas fa-exclamation-circle"></i> Requires manager approval to generate invoice.
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ==================== SCREEN: VENDORS LIST ==================== -->
+        <section id="screen-vendors-list" class="screen-view hidden">
+          <div class="flex justify-between items-center mb-6">
+            <div>
+              <h2 class="text-xl font-bold text-cyprus">Vendors Master</h2>
+              <p class="text-xs text-darkText/60">Configure profiles, categories, GST registrations, and supplier scores.</p>
+            </div>
+            <button onclick="alert('Opening Vendor Register modal...')" class="px-4 py-2 bg-cyprus text-sand hover:text-white font-bold rounded-xl text-xs flex items-center gap-2 hover:bg-[#002d2b] transition-all">
+              <i class="fas fa-plus"></i> Add Vendor Profile
+            </button>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-cyprus/5 shadow-sm p-6">
+            <div class="overflow-x-auto custom-scrollbar">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr class="bg-sand/40 text-cyprus font-semibold uppercase border-b border-cyprus/10">
+                    <th class="py-3 px-4">Vendor Name</th>
+                    <th class="py-3 px-4">Category</th>
+                    <th class="py-3 px-4">GST Number</th>
+                    <th class="py-3 px-4">On-Time Rate</th>
+                    <th class="py-3 px-4">Historic Rating</th>
+                    <th class="py-3 px-4">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border-b border-cyprus/5">
+                    <td class="py-3.5 px-4 font-semibold text-cyprus">Delhi Hardware Hub</td>
+                    <td class="py-3.5 px-4">IT Hardware / Office</td>
+                    <td class="py-3.5 px-4 text-darkText/60 font-mono">07AAAAD1234F1Z1</td>
+                    <td class="py-3.5 px-4 text-green-700 font-bold">98%</td>
+                    <td class="py-3.5 px-4 text-yellow-500 font-bold"><i class="fas fa-star mr-1"></i> 4.8</td>
+                    <td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded bg-green-100 text-green-700 font-semibold text-[10px]">Active</span></td>
+                  </tr>
+                  <tr class="border-b border-cyprus/5">
+                    <td class="py-3.5 px-4 font-semibold text-cyprus">TechSolutions India</td>
+                    <td class="py-3.5 px-4">IT Hardware / Networking</td>
+                    <td class="py-3.5 px-4 text-darkText/60 font-mono">09BBBBD5678K2Z5</td>
+                    <td class="py-3.5 px-4 text-green-700 font-bold">94%</td>
+                    <td class="py-3.5 px-4 text-yellow-500 font-bold"><i class="fas fa-star mr-1"></i> 4.2</td>
+                    <td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded bg-green-100 text-green-700 font-semibold text-[10px]">Active</span></td>
+                  </tr>
+                  <tr class="border-b border-cyprus/5">
+                    <td class="py-3.5 px-4 font-semibold text-cyprus">Global Furniture Hub</td>
+                    <td class="py-3.5 px-4">Office Furniture</td>
+                    <td class="py-3.5 px-4 text-darkText/60 font-mono">08CCCCD9101M3Z0</td>
+                    <td class="py-3.5 px-4 text-red-500 font-bold">82%</td>
+                    <td class="py-3.5 px-4 text-yellow-500 font-bold"><i class="fas fa-star mr-1"></i> 3.9</td>
+                    <td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded bg-green-100 text-green-700 font-semibold text-[10px]">Active</span></td>
+                  </tr>
+                  <tr class="border-b border-cyprus/5">
+                    <td class="py-3.5 px-4 font-semibold text-cyprus">Stationery & Co.</td>
+                    <td class="py-3.5 px-4">Stationery / Printing</td>
+                    <td class="py-3.5 px-4 text-darkText/60 font-mono">07DDDDD2345N4Z8</td>
+                    <td class="py-3.5 px-4 text-green-700 font-bold">96%</td>
+                    <td class="py-3.5 px-4 text-yellow-500 font-bold"><i class="fas fa-star mr-1"></i> 4.6</td>
+                    <td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded bg-red-100 text-red-700 font-semibold text-[10px]">Blocked</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ==================== SCREEN: REPORTS ==================== -->
+        <section id="screen-reports" class="screen-view hidden">
+          <div class="flex justify-between items-center mb-6">
+            <div>
+              <h2 class="text-xl font-bold text-cyprus">Procurement Analytics</h2>
+              <p class="text-xs text-darkText/60">Spending distributions, monthly trends, and cost efficiency reporting.</p>
+            </div>
+            <button onclick="alert('Exporting data matrix to CSV...')" class="px-4 py-2 bg-cyprus text-sand hover:text-white font-bold rounded-xl text-xs flex items-center gap-2 hover:bg-[#002d2b] transition-all">
+              <i class="fas fa-file-csv"></i> Export CSV
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Monthly trend bar chart -->
+            <div class="bg-white rounded-2xl border border-cyprus/5 shadow-sm p-6">
+              <h3 class="text-sm font-bold text-cyprus mb-4">Spend Trend (Last 6 Months)</h3>
+              <div class="h-64 relative">
+                <canvas id="spendChart"></canvas>
+              </div>
+            </div>
+
+            <!-- Category pie chart -->
+            <div class="bg-white rounded-2xl border border-cyprus/5 shadow-sm p-6">
+              <h3 class="text-sm font-bold text-cyprus mb-4">Spend by Category Breakdown</h3>
+              <div class="h-64 relative">
+                <canvas id="categoryChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ==================== SCREEN: VENDOR PORTAL ==================== -->
+        <!-- This represents the external view when clicking the Magic Link -->
+        <section id="screen-vendor-portal" class="screen-view hidden">
+          <div class="max-w-4xl mx-auto bg-white rounded-2xl border border-cyprus/5 shadow-lg overflow-hidden">
+            <!-- Header bar -->
+            <div class="bg-cyprus text-sand px-8 py-6">
+              <div class="flex justify-between items-center">
+                <div>
+                  <span class="text-[10px] uppercase font-bold tracking-widest text-mint">Supplier Portal Portal</span>
+                  <h2 class="text-lg font-bold text-white mt-1">Submit Quotation: RFQ-2026-003</h2>
+                </div>
+                <div class="text-right">
+                  <span class="block text-xs">Customer: <strong>Acme Corp</strong></span>
+                  <span class="block text-[10px] text-white/60">Deadline: June 15, 2026</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Body contents -->
+            <div class="p-8 flex flex-col gap-6">
+              <div class="bg-sand/30 rounded-xl p-4 text-xs text-darkText/80">
+                <strong class="text-cyprus">Information:</strong> As a vendor, you do not need an account. Please upload your quote document (PDF or Image) or manually enter your prices below.
+              </div>
+
+              <!-- AI Quote Reader Upload box -->
+              <div class="border-2 border-dashed border-cyprus/20 rounded-xl p-6 bg-sand/10 text-center cursor-pointer hover:bg-sand/30 hover:border-cyprus/40 transition-all" id="dropzone-upload" onclick="triggerFileInput()">
+                <i class="fas fa-cloud-upload-alt text-3xl text-cyprus mb-3"></i>
+                <h4 class="text-sm font-bold text-cyprus">Smart Quote Reader (Gemini AI Powered)</h4>
+                <p class="text-xs text-darkText/60 mt-1">Drag and drop your vendor quote PDF/Image here or click to browse</p>
+                <input type="file" id="quote-file-input" class="hidden" accept="application/pdf,image/*" onchange="simulateQuoteExtraction(event)">
+              </div>
+
+              <!-- Form fields -->
+              <form id="vendor-portal-form" class="flex flex-col gap-4 text-xs">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block font-bold text-cyprus uppercase mb-1.5">Supplier Name</label>
+                    <input type="text" id="vp-vendor-name" value="Delhi Hardware Hub" class="w-full px-3 py-2 bg-sand/30 border border-cyprus/10 rounded-xl focus:outline-none">
+                  </div>
+                  <div>
+                    <label class="block font-bold text-cyprus uppercase mb-1.5">Expected Delivery (Days)</label>
+                    <input type="number" id="vp-delivery" placeholder="e.g. 5" class="w-full px-3 py-2 bg-sand/30 border border-cyprus/10 rounded-xl focus:outline-none">
+                  </div>
+                </div>
+
+                <!-- Quotation lines -->
+                <div>
+                  <h3 class="font-bold text-cyprus uppercase mb-2">Quotation Pricing Details</h3>
+                  <table class="w-full text-left border border-cyprus/5 rounded-xl overflow-hidden">
+                    <thead class="bg-sand/30 text-cyprus font-semibold">
+                      <tr>
+                        <th class="py-2.5 px-3">Item Specifications</th>
+                        <th class="py-2.5 px-3 w-20 text-center">Qty</th>
+                        <th class="py-2.5 px-3 w-40">Unit Price (₹)</th>
+                      </tr>
+                    </thead>
+                    <tbody id="vp-lines-tbody">
+                      <tr>
+                        <td class="py-3 px-3 text-cyprus font-medium">Dell Latitude 3440 Laptop</td>
+                        <td class="py-3 px-3 text-center">50</td>
+                        <td class="py-3 px-3 relative">
+                          <input type="number" id="vp-price-1" placeholder="Enter price" class="w-full px-2 py-1.5 bg-sand/30 border border-cyprus/10 rounded-lg focus:outline-none pl-6 text-right item-price-input">
+                          <span class="absolute left-4 top-3 text-darkText/40">₹</span>
+                          <span id="ai-badge-1" class="hidden absolute -right-6 top-3 text-green-600 text-xs" title="Extracted by Gemini AI"><i class="fas fa-check-circle"></i> AI</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="py-3 px-3 text-cyprus font-medium">Ergonomic Standing Office Desk</td>
+                        <td class="py-3 px-3 text-center">10</td>
+                        <td class="py-3 px-3 relative">
+                          <input type="number" id="vp-price-2" placeholder="Enter price" class="w-full px-2 py-1.5 bg-sand/30 border border-cyprus/10 rounded-lg focus:outline-none pl-6 text-right item-price-input">
+                          <span class="absolute left-4 top-3 text-darkText/40">₹</span>
+                          <span id="ai-badge-2" class="hidden absolute -right-6 top-3 text-green-600 text-xs" title="Extracted by Gemini AI"><i class="fas fa-check-circle"></i> AI</span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="pt-4 border-t border-cyprus/5 flex justify-end gap-3">
+                  <button type="button" onclick="submitVendorQuotation()" class="px-6 py-2.5 bg-cyprus text-sand hover:text-white rounded-xl font-bold hover:bg-[#002d2b] transition-all">
+                    Submit Quote Response
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- 3. FLOATING COPILOT CHAT WIDGET -->
+  <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+    <!-- Chat Dialogue Box -->
+    <div id="chat-copilot-window" class="hidden w-80 h-96 glass-card rounded-2xl flex flex-col overflow-hidden mb-3 border border-cyprus/10 shadow-lg transition-all">
+      <!-- Title header -->
+      <div class="bg-cyprus text-white p-4 flex justify-between items-center shadow-sm">
+        <div class="flex items-center gap-2">
+          <i class="fas fa-robot text-mint"></i>
+          <div>
+            <span class="block text-xs font-bold tracking-wide">Procurement Copilot</span>
+            <span class="block text-[9px] text-mint/80">Llama3-8b via Groq</span>
+          </div>
+        </div>
+        <button onclick="toggleCopilotChat()" class="text-white/60 hover:text-white"><i class="fas fa-times"></i></button>
+      </div>
+
+      <!-- Dialogue text box -->
+      <div id="chat-messages" class="flex-1 overflow-y-auto p-4 custom-scrollbar flex flex-col gap-3 text-xs bg-sand/35">
+        <div class="flex gap-2">
+          <div class="w-6 h-6 rounded-full bg-cyprus text-sand flex items-center justify-center text-[10px] font-bold"><i class="fas fa-robot"></i></div>
+          <div class="bg-white border border-cyprus/5 rounded-xl p-2.5 max-w-[80%] text-darkText shadow-sm">
+            Hi! I am your Procurement AI assistant. How can I help you today?
+          </div>
+        </div>
+        <!-- Preset intent shortcuts -->
+        <div class="flex flex-wrap gap-1.5 pl-8">
+          <button onclick="sendQuickCopilotMsg('Pending approvals?')" class="px-2 py-1 bg-white hover:bg-sand rounded border border-cyprus/5 text-[10px] text-cyprus font-semibold transition-all">Pending approvals?</button>
+          <button onclick="sendQuickCopilotMsg('Total spend this month?')" class="px-2 py-1 bg-white hover:bg-sand rounded border border-cyprus/5 text-[10px] text-cyprus font-semibold transition-all">Total spend this month?</button>
+          <button onclick="sendQuickCopilotMsg('Who is the top vendor?')" class="px-2 py-1 bg-white hover:bg-sand rounded border border-cyprus/5 text-[10px] text-cyprus font-semibold transition-all">Who is the top vendor?</button>
+        </div>
+      </div>
+
+      <!-- Chat input action -->
+      <div class="p-3 border-t border-cyprus/10 bg-white flex gap-2">
+        <input type="text" id="chat-input" placeholder="Ask anything about ERP data..." class="flex-1 bg-sand/40 border border-cyprus/10 rounded-xl px-3 py-1.5 text-xs text-cyprus focus:outline-none focus:border-cyprus" onkeypress="handleChatKeypress(event)">
+        <button onclick="sendCopilotMessage()" class="w-8 h-8 rounded-xl bg-cyprus text-sand flex items-center justify-center hover:bg-[#002d2b] transition-all text-xs">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Collapsed chat icon -->
+    <button onclick="toggleCopilotChat()" class="w-12 h-12 rounded-full bg-cyprus text-sand shadow-lg flex items-center justify-center hover:bg-[#002d2b] transition-all text-lg hover:scale-105 border border-white/10">
+      <i class="fas fa-robot text-xl"></i>
+    </button>
+  </div>
+
+  <!-- SCRIPT INTEGRATION (Stand-alone Prototype Business Logic) -->
+  <script>
+    // State management
+    let currentRole = 'officer';
+    let voiceRecognitionActive = false;
+    let recognition = null;
+    let spendTrendChart = null;
+    let categoryPieChart = null;
+
+    // Load standard data on load
+    window.onload = () => {
+      initCharts();
+    };
+
+    // Screen navigation router
+    function showScreen(screenId) {
+      document.querySelectorAll('.screen-view').forEach(screen => {
+        screen.classList.add('hidden');
+      });
+      document.getElementById('screen-' + screenId).classList.remove('hidden');
+
+      // Update sidebar active links
+      document.querySelectorAll('#sidebar-panel nav a').forEach(link => {
+        link.classList.remove('bg-white/10', 'text-white');
+        link.classList.add('text-white/70');
+      });
+      const activeLink = document.getElementById('nav-' + screenId);
+      if (activeLink) {
+        activeLink.classList.add('bg-white/10', 'text-white');
+        activeLink.classList.remove('text-white/70');
+      }
+    }
+
+    // Toggle sidebar on mobile
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar-panel');
+      if (sidebar.classList.contains('-ml-64')) {
+        sidebar.classList.remove('-ml-64');
+      } else {
+        sidebar.classList.add('-ml-64');
+      }
+    }
+
+    // Role switcher framework (The demo timeline storyteller)
+    function switchRole(role) {
+      currentRole = role;
+      
+      // Update global control panel buttons style
+      document.querySelectorAll('[id^="btn-role-"]').forEach(btn => {
+        btn.classList.remove('bg-coral', 'text-cyprus', 'font-bold', 'border', 'border-coral/20');
+        btn.classList.add('text-white/70', 'bg-white/10');
+      });
+      
+      const activeBtn = document.getElementById('btn-role-' + role);
+      if (activeBtn) {
+        activeBtn.classList.add('bg-coral', 'text-cyprus', 'font-bold');
+        activeBtn.classList.remove('text-white/70', 'bg-white/10');
+      }
+
+      // Update avatar and username display
+      const avatarEl = document.getElementById('user-avatar');
+      const nameEl = document.getElementById('user-display-name');
+      const roleEl = document.getElementById('user-display-role');
+      const greetingText = document.getElementById('header-greeting-text');
+
+      if (role === 'officer') {
+        avatarEl.innerText = "P";
+        nameEl.innerText = "Priya Sharma";
+        roleEl.innerText = "Procurement Officer";
+        greetingText.innerText = "Hello, Priya Sharma!";
+        showScreen('dashboard');
+      } else if (role === 'vendor') {
+        avatarEl.innerText = "R";
+        nameEl.innerText = "Rajesh Kumar";
+        roleEl.innerText = "Delhi Hardware Hub";
+        greetingText.innerText = "Supplier Portal Access";
+        showScreen('vendor-portal');
+      } else if (role === 'manager') {
+        avatarEl.innerText = "A";
+        nameEl.innerText = "Manager Arun";
+        roleEl.innerText = "Department Head";
+        greetingText.innerText = "Awaiting Approvals Menu";
+        showScreen('approval');
+      } else if (role === 'admin') {
+        avatarEl.innerText = "AD";
+        nameEl.innerText = "System Administrator";
+        roleEl.innerText = "Global Root Access";
+        greetingText.innerText = "Hello, Admin!";
+        showScreen('dashboard');
+      }
+    }
+
+    // Search and filter in vendors table
+    function filterVendors() {
+      const searchVal = document.getElementById('vendor-search').value.toLowerCase();
+      const rows = document.querySelectorAll('#vendors-tbody tr');
+      rows.forEach(row => {
+        const nameText = row.querySelector('td:nth-child(2)').innerText.toLowerCase();
+        const companyText = row.querySelector('td:nth-child(3)').innerText.toLowerCase();
+        if (nameText.includes(searchVal) || companyText.includes(searchVal)) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    // Voice to RFQ integration
+    function toggleVoiceRecognition() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert("Web Speech API is not supported in this browser. Please try Chrome/Edge.");
+        return;
+      }
+
+      const btn = document.getElementById('btn-voice-rfq');
+      const toast = document.getElementById('voice-toast');
+      const transcriptEl = document.getElementById('voice-transcript-text');
+
+      if (voiceRecognitionActive) {
+        recognition.stop();
+        voiceRecognitionActive = false;
+        btn.innerHTML = '<i class="fas fa-microphone"></i> <span>Voice-to-RFQ</span>';
+        toast.classList.add('hidden');
+      } else {
+        voiceRecognitionActive = true;
+        btn.innerHTML = '<i class="fas fa-microphone-slash"></i> <span>Stop Listening</span>';
+        toast.classList.remove('hidden');
+        transcriptEl.innerText = "Listening to voice input... speak clearly.";
+
+        recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
+
+        recognition.onresult = (event) => {
+          const text = event.results[0][0].transcript;
+          transcriptEl.innerHTML = `Received: "<strong>${text}</strong>"`;
+          parseAndFillVoiceData(text);
+          setTimeout(() => {
+            closeVoiceToast();
+          }, 3000);
+        };
+
+        recognition.onerror = (e) => {
+          console.error("Speech Error", e);
+          transcriptEl.innerText = "Could not recognize speech. Try again.";
+        };
+
+        recognition.onend = () => {
+          voiceRecognitionActive = false;
+          btn.innerHTML = '<i class="fas fa-microphone"></i> <span>Voice-to-RFQ</span>';
+        };
+
+        recognition.start();
+      }
+    }
+
+    function closeVoiceToast() {
+      document.getElementById('voice-toast').classList.add('hidden');
+    }
+
+    function parseAndFillVoiceData(text) {
+      // e.g. "Create RFQ for 50 Dell Laptops, deadline June 15th"
+      document.getElementById('rfq-title').value = "IT Equipment Procurement Q2";
+      
+      const linesTbody = document.getElementById('rfq-lines-tbody');
+      // Set values on first row
+      const nameInput = linesTbody.querySelector('.item-name-field');
+      const qtyInput = linesTbody.querySelector('.item-qty-field');
+
+      let parsedQty = 50;
+      let parsedItem = "Dell Latitude 3440 Laptop";
+
+      const qtyMatch = text.match(/(\d+)\s+([a-zA-Z\s]+)/);
+      if (qtyMatch) {
+        parsedQty = parseInt(qtyMatch[1], 10);
+        parsedItem = qtyMatch[2].replace(/(by|deadline|for|due)/gi, '').trim();
+      }
+
+      if (nameInput) nameInput.value = parsedItem;
+      if (qtyInput) qtyInput.value = parsedQty;
+
+      // Fill deadline mock
+      document.getElementById('rfq-deadline').value = "2026-06-15";
+    }
+
+    // Form line addition helper
+    function addRFQLine() {
+      const tbody = document.getElementById('rfq-lines-tbody');
+      const tr = document.createElement('tr');
+      tr.className = 'border-b border-cyprus/5';
+      tr.innerHTML = `
+        <td class="py-2 px-3"><input type="text" placeholder="Item description" class="w-full py-1 bg-transparent border-b border-transparent focus:border-cyprus/20 focus:outline-none item-name-field"></td>
+        <td class="py-2 px-3"><input type="number" placeholder="1" class="w-full py-1 bg-transparent border-b border-transparent focus:border-cyprus/20 focus:outline-none item-qty-field"></td>
+        <td class="py-2 px-3">
+          <select class="w-full py-1 bg-transparent border-b border-transparent focus:border-cyprus/20 focus:outline-none">
+            <option>Units</option>
+            <option>Boxes</option>
+            <option>Sets</option>
+          </select>
+        </td>
+        <td class="py-2 px-3 text-center"><button onclick="deleteRFQLine(this)" class="text-red-500 hover:text-red-700"><i class="fas fa-trash-alt"></i></button></td>
+      `;
+      tbody.appendChild(tr);
+    }
+
+    function deleteRFQLine(btn) {
+      btn.closest('tr').remove();
+    }
+
+    function publishRFQ() {
+      const title = document.getElementById('rfq-title').value;
+      if (!title) {
+        alert("Please enter an RFQ title.");
+        return;
+      }
+      alert(`RFQ "${title}" has been successfully published!\nMagic links sent to Delhi Hardware, TechSolutions, and Global Furniture.`);
+      showScreen('comparison');
+    }
+
+    // Smart Quote Reader PDF extraction simulation
+    function triggerFileInput() {
+      document.getElementById('quote-file-input').click();
+    }
+
+    function simulateQuoteExtraction(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const dropzone = document.getElementById('dropzone-upload');
+      const origContent = dropzone.innerHTML;
+
+      // Show spinner loader
+      dropzone.innerHTML = `
+        <div class="flex flex-col items-center justify-center py-4">
+          <i class="fas fa-spinner fa-spin text-3xl text-cyprus mb-2"></i>
+          <span class="text-xs font-semibold text-cyprus">Gemini 1.5 Flash parsing "${file.name}"...</span>
+        </div>
+      `;
+
+      setTimeout(() => {
+        dropzone.innerHTML = origContent;
+        // Autofill vendor portal form
+        document.getElementById('vp-vendor-name').value = "Delhi Hardware Hub";
+        document.getElementById('vp-delivery').value = 5;
+        document.getElementById('vp-price-1').value = 42000;
+        document.getElementById('vp-price-2').value = 15000;
+
+        // Show green checks/AI indicator labels
+        document.getElementById('ai-badge-1').classList.remove('hidden');
+        document.getElementById('ai-badge-2').classList.remove('hidden');
+
+        alert("Gemini AI extracted quote successfully!\nPopulated 2 line items with pricing and delivery estimates.");
+      }, 2000);
+    }
+
+    function submitVendorQuotation() {
+      alert("Quotation response has been submitted successfully through the portal.\nNotification dispatched to Priya Sharma.");
+      switchRole('officer');
+    }
+
+    // Manager Stepper Approval flow
+    function sendForApproval() {
+      alert("Quotation comparison packet forwarded to Manager Arun for final approval.");
+      switchRole('manager');
+    }
+
+    function approveWorkflow() {
+      const remarks = document.getElementById('approval-remarks').value;
+      alert(`Procurement approved!\nPurchase Order generated with remarks: "${remarks || 'Approved'}"`);
+      
+      // Update Stepper indicators in UI
+      const underReview = document.getElementById('step-under-review');
+      const poIssued = document.getElementById('step-po-issued');
+      const statusText = document.getElementById('arun-sign-status');
+
+      underReview.innerHTML = `
+        <div class="w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center text-xs font-bold"><i class="fas fa-check"></i></div>
+        <div class="text-xs">
+          <strong class="block text-cyprus">Reviewed</strong>
+          <span class="text-[10px] text-darkText/60">Arun M. - Approved</span>
+        </div>
+      `;
+
+      poIssued.classList.remove('opacity-50');
+      poIssued.innerHTML = `
+        <div class="w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center text-xs font-bold"><i class="fas fa-check"></i></div>
+        <div class="text-xs">
+          <strong class="block text-cyprus">PO Issued</strong>
+          <span class="text-[10px] text-darkText/60">Auto-Generated</span>
+        </div>
+      `;
+
+      statusText.innerText = "Approved - PO generated";
+      statusText.className = "text-[10px] text-green-600 font-bold";
+
+      // Unlock Purchase order invoice generation
+      const docStatus = document.getElementById('po-doc-status');
+      const watermark = document.getElementById('confirmed-watermark');
+      const invoiceBtn = document.getElementById('btn-gen-invoice');
+      const warnMsg = document.getElementById('invoice-warning-msg');
+
+      docStatus.innerText = "Approved";
+      docStatus.className = "font-bold text-green-700 uppercase";
+      watermark.classList.remove('hidden');
+      invoiceBtn.removeAttribute('disabled');
+      invoiceBtn.className = "w-full py-2.5 bg-cyprus text-sand hover:text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2";
+      warnMsg.innerHTML = '<span class="text-green-600"><i class="fas fa-check-circle"></i> Ready to generate invoice.</span>';
+
+      showScreen('po-view');
+    }
+
+    function rejectWorkflow() {
+      const remarks = document.getElementById('approval-remarks').value;
+      if (!remarks) {
+        alert("Please enter rejection remarks.");
+        return;
+      }
+      alert(`Procurement request rejected. Reason logged: "${remarks}"`);
+    }
+
+    // Invoice actions
+    function generateInvoice() {
+      alert("Invoice generated in Accounting!\nVendor bill created with 18% GST (₹4,05,000.00). status: Sent for Payment.");
+    }
+
+    function sendInvoiceEmail() {
+      const btn = document.getElementById('btn-email-po');
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Sending...';
+      
+      setTimeout(() => {
+        btn.innerHTML = '<i class="fas fa-envelope mr-1"></i> Send PO Email';
+        alert("Purchase Order PDF dispatched successfully to sales@delhihardware.com!");
+      }, 1500);
+    }
+
+    // Copilot AI chatbot toggle
+    function toggleCopilotChat() {
+      const chat = document.getElementById('chat-copilot-window');
+      chat.classList.toggle('hidden');
+    }
+
+    function handleChatKeypress(e) {
+      if (e.key === 'Enter') {
+        sendCopilotMessage();
+      }
+    }
+
+    function sendQuickCopilotMsg(text) {
+      document.getElementById('chat-input').value = text;
+      sendCopilotMessage();
+    }
+
+    function sendCopilotMessage() {
+      const input = document.getElementById('chat-input');
+      const query = input.value.trim();
+      if (!query) return;
+
+      appendChatMessage(query, 'user');
+      input.value = '';
+
+      // Typing feedback simulation
+      const typingId = appendTypingIndicator();
+
+      setTimeout(() => {
+        removeTypingIndicator(typingId);
+        const reply = resolveCopilotIntent(query);
+        appendChatMessage(reply, 'copilot');
+      }, 1000);
+    }
+
+    function appendChatMessage(text, sender) {
+      const chatMessages = document.getElementById('chat-messages');
+      const msgDiv = document.createElement('div');
+      msgDiv.className = 'flex gap-2 ' + (sender === 'user' ? 'justify-end' : '');
+      
+      const avatar = sender === 'user' ? '' : '<div class="w-6 h-6 rounded-full bg-cyprus text-sand flex items-center justify-center text-[10px] font-bold shrink-0"><i class="fas fa-robot"></i></div>';
+      const bubbleClass = sender === 'user' ? 'bg-cyprus text-sand rounded-br-none' : 'bg-white border border-cyprus/5 text-darkText rounded-bl-none shadow-sm';
+
+      msgDiv.innerHTML = `
+        ${avatar}
+        <div class="${bubbleClass} rounded-xl p-2.5 max-w-[80%] whitespace-pre-line leading-relaxed">
+          ${text}
+        </div>
+      `;
+      chatMessages.appendChild(msgDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function appendTypingIndicator() {
+      const chatMessages = document.getElementById('chat-messages');
+      const indicatorId = 'indicator-' + Date.now();
+      const div = document.createElement('div');
+      div.id = indicatorId;
+      div.className = 'flex gap-2';
+      div.innerHTML = `
+        <div class="w-6 h-6 rounded-full bg-cyprus text-sand flex items-center justify-center text-[10px] font-bold shrink-0"><i class="fas fa-robot"></i></div>
+        <div class="bg-white border border-cyprus/5 text-darkText rounded-xl rounded-bl-none p-2.5 shadow-sm">
+          <div class="typing-dots"><span></span><span></span><span></span></div>
+        </div>
+      `;
+      chatMessages.appendChild(div);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      return indicatorId;
+    }
+
+    function removeTypingIndicator(id) {
+      const el = document.getElementById(id);
+      if (el) el.remove();
+    }
+
+    function resolveCopilotIntent(query) {
+      const val = query.toLowerCase();
+      if (val.includes('approv') || val.includes('pending')) {
+        return "You have 2 pending purchase approvals:\n1. RFQ-2026-003: IT Equipment (₹1,25,000)\n2. RFQ-2026-004: Office Desks (₹45,000)";
+      }
+      if (val.includes('spend') || val.includes('cost') || val.includes('money')) {
+        return "Acme Corporation's total monthly spend is ₹22,50,000.00 (pending orders included). The approved historical total is ₹3,24,000.00.";
+      }
+      if (val.includes('cheapest') || val.includes('vendor') || val.includes('recommend')) {
+        return "I recommend Delhi Hardware Hub. Their quote of ₹22,50,000 is the cheapest and they deliver in 5 days.";
+      }
+      return "I can query the database directly. Try asking 'What are my pending approvals?' or 'Show me the top performing vendor'.";
+    }
+
+    // Chart.js visualizations
+    function initCharts() {
+      // Spend trends chart
+      const spendCtx = document.getElementById('spendChart').getContext('2d');
+      spendTrendChart = new Chart(spendCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+          datasets: [{
+            label: 'Monthly Spend (₹)',
+            data: [120000, 150000, 80000, 220000, 190000, 324000],
+            backgroundColor: 'rgba(0, 70, 67, 0.85)',
+            borderColor: '#004643',
+            borderWidth: 1,
+            borderRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: { color: 'rgba(0, 70, 67, 0.05)' }
+            },
+            x: {
+              grid: { display: false }
+            }
+          },
+          plugins: {
+            legend: { display: false }
+          }
+        }
+      });
+
+      // Category pie chart
+      const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+      categoryPieChart = new Chart(categoryCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['IT Hardware', 'Office Supplies', 'Furniture', 'Logistics'],
+          datasets: [{
+            data: [55, 15, 20, 10],
+            backgroundColor: [
+              '#004643',
+              '#ABD1C6',
+              '#F9BC60',
+              '#E4DFD5'
+            ],
+            borderWidth: 2,
+            borderColor: '#FFFFFF'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                boxWidth: 12,
+                padding: 16
+              }
+            }
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>
