@@ -363,7 +363,7 @@
 
         <!-- ==================== SCREEN: DASHBOARD ==================== -->
         <section id="screen-dashboard" class="screen-view">
-          <h2 class="text-xl font-bold text-cyprus mb-4" id="dashboard-title">Procurement Command Center</h2>
+          
           
           <!-- Metric Cards (Matching Interoly design structure) -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8" id="dashboard-metric-cards">
@@ -1424,10 +1424,10 @@
       const actionsEl = document.getElementById('dashboard-quick-actions-container');
       const sideEl = document.getElementById('dashboard-side-panel-container');
 
-      if (!titleEl || !cardsEl || !tableEl || !actionsEl || !sideEl) return;
+      if (!cardsEl || !tableEl || !actionsEl || !sideEl) return;
 
       if (role === 'officer') {
-        titleEl.innerText = "Procurement Command Center";
+        if (titleEl) titleEl.innerText = "Procurement Command Center";
         
         cardsEl.innerHTML = `
             <div class="bg-white p-6 rounded-2xl border border-cyprus/5 shadow-sm flex items-center gap-4">
@@ -1566,7 +1566,7 @@
         `;
 
       } else if (role === 'manager') {
-        titleEl.innerText = "Manager Approval Panel";
+        if (titleEl) titleEl.innerText = "Manager Approval Panel";
         
         cardsEl.innerHTML = `
             <div class="bg-white p-6 rounded-2xl border ${isPOApproved || isPORejected ? 'border-cyprus/5' : 'border-red-200'} shadow-sm flex items-center gap-4">
@@ -1693,7 +1693,7 @@
         `;
 
       } else if (role === 'vendor') {
-        titleEl.innerText = "Supplier Dashboard — Delhi Hardware Hub";
+        if (titleEl) titleEl.innerText = "Supplier Dashboard — Delhi Hardware Hub";
         
         cardsEl.innerHTML = `
             <div class="bg-white p-6 rounded-2xl border border-blue-200 shadow-sm flex items-center gap-4">
@@ -1809,7 +1809,7 @@
         `;
 
       } else if (role === 'admin') {
-        titleEl.innerText = "System Administration Workspace";
+        if (titleEl) titleEl.innerText = "System Administration Workspace";
         
         const pendingUsers = userRegistrations.filter(u => u.status === 'Pending');
         
