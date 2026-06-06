@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<<odoo>
+    <data>
+        <template id="report_purchaseorder_document" inherit_id="purchase.report_purchaseorder_document">
+            <xpath expr="//div[@class='page']" position="replace">
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <h2 style="text-align: center; color: #714B67;">Purchase Order</h2>
+                    <div class="row mt32 mb32">
+                        <div class="col-6">
+                            <strong>Vendor:</strong>
+                            <div t-field="o.partner_id.name"/>
+                            <div t-field="o.partner_id.street"/>
+                            <div t-field="o.partner_id.city"/>
+                            <div>GST: <span t-field="o.partner_id.x_gst_number"/></div>
+                        </div>
+                        <div class="col-6">
+                            <strong>PO Number:</strong> <span t-field="o.name"/><br/>
+                            <strong>Date:</strong> <span t-field="o.date_order"/><br/>
+                            <strong>RFQ Ref:</strong> <span t-field="o.x_rfq_title"/>
+                        </div>
+                    </div>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Quantity</th>
+                                <th>Unit Price</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.order_line" t-as="line">
+                                <td><span t-field="line.name"/></td>
+                                <td><span t-field="line.product_qty"/></td>
+                                <td><span t-field="line.price_unit"/></td>
+                                <td><span t-field="line.price_subtotal"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="row">
+                        <div class="col-6 offset-6">
+                            <table class="table table-sm">
+                                <tr><td>Subtotal:</td><td><span t-field="o.amount_untaxed"/></td></tr>
+                                <tr><td>CGST (9%):</td><td><span t-esc="o.amount_tax / 2"/></td></tr>
+                                <tr><td>SGST (9%):</td><td><span t-esc="o.amount_tax / 2"/></td></tr>
+                                <tr><td><strong>Total:</strong></td><td><strong><span t-field="o.amount_total"/></strong></td></tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="footer mt32">
+                        <p>Authorized Signature: _______________________</p>
+                        <p style="text-align: center; color: #666;">This is a computer-generated document.</p>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>
