@@ -281,6 +281,11 @@
                   <i class="fas fa-file-invoice w-4"></i> PO & Invoices
                 </span>
               </a>
+              <a href="#" onclick="showScreen('vendors-list')" id="nav-vendors-list" class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-white/5 text-white/70 text-sm transition-all">
+                <span class="flex items-center gap-3">
+                  <i class="fas fa-users w-4"></i> Vendors Master
+                </span>
+              </a>
               <a href="#" onclick="showScreen('vendor-portal')" id="nav-vendor-portal" class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-white/5 text-white/70 text-sm transition-all hidden">
                 <span class="flex items-center gap-3">
                   <i class="fas fa-store-alt w-4"></i> Vendor Portal
@@ -293,9 +298,6 @@
           <div>
             <div class="text-[10px] uppercase font-bold text-white/30 tracking-widest px-3 mb-2">Management</div>
             <nav class="flex flex-col gap-1">
-              <a href="#" onclick="showScreen('vendors-list')" id="nav-vendors-list" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 text-white/70 text-sm transition-all">
-                <i class="fas fa-users w-4"></i> Vendors Master
-              </a>
               <a href="#" onclick="showScreen('reports')" id="nav-reports" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 text-white/70 text-sm transition-all">
                 <i class="fas fa-chart-line w-4"></i> Analytics Reports
               </a>
@@ -2013,15 +2015,24 @@
         `;
 
         actionsEl.innerHTML = `
-                <h3 class="text-sm font-bold text-cyprus mb-4">Supplier Quick Tools</h3>
-                <div class="flex flex-col gap-3">
-                  <button onclick="showScreen('vendor-portal')" class="w-full py-2.5 bg-cyprus text-sand hover:text-white rounded-xl text-xs font-semibold hover:bg-[#002d2b] transition-all flex items-center justify-center gap-2">
-                    <i class="fas fa-cloud-upload-alt"></i> Go to Submission Portal
-                  </button>
-                  <button onclick="alert('Support: Contacting Priya Sharma (Lead Buyer)')" class="w-full py-2.5 bg-sandDark text-cyprus rounded-xl text-xs font-semibold hover:bg-sandDark/75 transition-all flex items-center justify-center gap-2">
-                    <i class="fas fa-envelope"></i> Message Procurement Officer
-                  </button>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 w-full">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-cyprus/5 text-cyprus flex items-center justify-center text-sm font-semibold">
+                  <i class="fas fa-bolt"></i>
                 </div>
+                <div>
+                  <h4 class="text-xs font-bold text-cyprus uppercase tracking-wider text-cyprus">Supplier Quick Tools</h4>
+                </div>
+              </div>
+              <div class="flex flex-wrap items-center gap-3">
+                <button onclick="showScreen('vendor-portal')" class="px-4 py-2 bg-cyprus text-sand hover:text-white rounded-xl text-xs font-semibold hover:bg-[#002d2b] transition-all flex items-center gap-1.5 shadow-sm">
+                  <i class="fas fa-cloud-upload-alt text-[10px]"></i> Go to Submission Portal
+                </button>
+                <button onclick="alert('Support: Contacting Priya Sharma (Lead Buyer)')" class="px-4 py-2 bg-sandDark text-cyprus hover:bg-sandDark/80 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 shadow-sm">
+                  <i class="fas fa-envelope text-[10px]"></i> Message Procurement Officer
+                </button>
+              </div>
+            </div>
         `;
 
         sideEl.innerHTML = `
@@ -2184,12 +2195,21 @@
         tableEl.innerHTML = userTableHTML + supplierTableHTML;
 
         actionsEl.innerHTML = `
-                <h3 class="text-sm font-bold text-cyprus mb-4">Admin Console</h3>
-                <div class="flex flex-col gap-3">
-                  <button onclick="alert('Initiating master dataset backup...')" class="w-full py-2.5 bg-cyprus text-sand hover:text-white rounded-xl text-xs font-semibold hover:bg-[#002d2b] transition-all flex items-center justify-center gap-2">
-                    <i class="fas fa-download"></i> Backup Postgres DB
-                  </button>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 w-full">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-cyprus/5 text-cyprus flex items-center justify-center text-sm font-semibold">
+                  <i class="fas fa-bolt"></i>
                 </div>
+                <div>
+                  <h4 class="text-xs font-bold text-cyprus uppercase tracking-wider text-cyprus">Admin Console</h4>
+                </div>
+              </div>
+              <div class="flex flex-wrap items-center gap-3">
+                <button onclick="alert('Initiating master dataset backup...')" class="px-4 py-2 bg-cyprus text-sand hover:text-white rounded-xl text-xs font-semibold hover:bg-[#002d2b] transition-all flex items-center gap-1.5 shadow-sm">
+                  <i class="fas fa-download text-[10px]"></i> Backup Postgres DB
+                </button>
+              </div>
+            </div>
         `;
 
         sideEl.innerHTML = `
