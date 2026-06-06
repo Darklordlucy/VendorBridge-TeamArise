@@ -1229,10 +1229,7 @@
     let spendTrendChart = null;
     let categoryPieChart = null;
 
-    // Load standard data on load
-    window.onload = () => {
-      initCharts();
-    };
+    // Load standard data on load is defined at the bottom of the script
 
     // Screen navigation router
     function showScreen(screenId) {
@@ -1986,7 +1983,7 @@
     }
 
     // Document switcher variables & logic
-    const poDocHTML = `
+    let poDocHTML = `
               <!-- Confirmed Watermark -->
               <div class="absolute top-12 right-12 border-4 border-green-600 text-green-600 font-bold text-xl uppercase tracking-widest px-4 py-2 rotate-12 rounded opacity-80 animate-fade-in">
                 Approved
@@ -2062,7 +2059,7 @@
               </div>
     `;
 
-    const invoiceDocHTML = `
+    let invoiceDocHTML = `
               <!-- Paid Watermark -->
               <div class="absolute top-12 right-12 border-4 border-blue-600 text-blue-600 font-bold text-xl uppercase tracking-widest px-4 py-2 rotate-12 rounded opacity-80 animate-fade-in animate-pulse">
                 Invoice Generated
@@ -2362,13 +2359,6 @@
       }
     }
 
-      // Initialize the document contents on load
-      poDocHTML = document.getElementById('po-invoice-document-body') ? document.getElementById('po-invoice-document-body').innerHTML : poDocHTML;
-
-      // Render standard data on load
-      updateVendorsMasterTable();
-      initCharts();
-    }
 
     // Voice to RFQ integration
     function toggleVoiceRecognition() {
@@ -2905,7 +2895,7 @@
     }
 
     // Document switcher variables & logic
-    const poDocHTML = `
+    let poDocHTML = `
               <!-- Confirmed Watermark -->
               <div class="absolute top-12 right-12 border-4 border-green-600 text-green-600 font-bold text-xl uppercase tracking-widest px-4 py-2 rotate-12 rounded opacity-80 animate-fade-in">
                 Approved
@@ -2981,7 +2971,7 @@
               </div>
     `;
 
-    const invoiceDocHTML = `
+    let invoiceDocHTML = `
               <!-- Paid Watermark -->
               <div class="absolute top-12 right-12 border-4 border-blue-600 text-blue-600 font-bold text-xl uppercase tracking-widest px-4 py-2 rotate-12 rounded opacity-80 animate-fade-in animate-pulse">
                 Invoice Generated
@@ -3281,6 +3271,7 @@
       }
     }
 
+    window.onload = () => {
       // Initialize the document contents on load
       poDocHTML = document.getElementById('po-invoice-document-body') ? document.getElementById('po-invoice-document-body').innerHTML : poDocHTML;
 
