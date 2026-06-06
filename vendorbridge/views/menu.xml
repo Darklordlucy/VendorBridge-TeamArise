@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<<odoo>
+    <data>
+        <!-- Main Menu -->
+        <menuitem id="menu_vendorbridge_root" name="VendorBridge" sequence="10" web_icon="vendorbridge,static/description/icon.png"/>
+
+        <!-- Dashboard -->
+        <menuitem id="menu_dashboard" name="Dashboard" parent="menu_vendorbridge_root" action="action_dashboard" sequence="1"/>
+
+        <!-- Vendors -->
+        <menuitem id="menu_vendors" name="Vendors" parent="menu_vendorbridge_root" action="action_vendor_list" sequence="2"/>
+
+        <!-- RFQs -->
+        <menuitem id="menu_rfqs" name="RFQs" parent="menu_vendorbridge_root" action="action_rfq_list" sequence="3"/>
+
+        <!-- Quotations -->
+        <menuitem id="menu_quotations" name="Quotations" parent="menu_vendorbridge_root" action="action_quotation_list" sequence="4"/>
+
+        <!-- Approvals -->
+        <menuitem id="menu_approvals" name="Approvals" parent="menu_vendorbridge_root" action="action_approval_list" sequence="5"/>
+
+        <!-- Reports -->
+        <menuitem id="menu_reports" name="Reports" parent="menu_vendorbridge_root" sequence="6"/>
+
+        <!-- Activity Logs -->
+        <menuitem id="menu_activity_logs" name="Activity Logs" parent="menu_vendorbridge_root" action="action_activity_log_list" sequence="7"/>
+    </data>
+</odoo>

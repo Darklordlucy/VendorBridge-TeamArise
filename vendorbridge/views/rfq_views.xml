@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<<odoo>
+    <data>
+        <!-- RFQ Tree View -->
+        <record id="view_rfq_tree" model="ir.ui.view">
+            <field name="name">vendorbridge.rfq.tree</field>
+            <field name="model">purchase.order</field>
+            <field name="arch" type="xml">
+                <tree string="RFQs" decoration-info="x_status=='sent'" decoration-success="x_status=='approved'" decoration-danger="x_status=='rejected'">
+                    <field name="x_rfq_title"/>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="x_deadline"/>
+                    <field name="x_priority"/>
+                    <field name="x_status"/>
+                    <field name="amount_total"/>
+                    <field name="date_order"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- RFQ Form View -->
+        <record id="view_rfq_form" model="ir.ui.view">
+            <field name="name">vendorbridge.rfq.form</field>
+            <field name="model">purchase.order</field>
+            <field name="arch" type="xml">
+                <form string="RFQ">
+                    <header>
+                        <button name="action_send_rfq" string="Send to Vendors" type="object" class="oe_highlight" states="draft"/>
+                        <button name="action_approve" string="Approve" type="object" class="oe_highlight" states="review,quoted"/>
+                        <button name="action_reject" string="Reject" type="object" states="review,quoted"/>
+                        <field name="x_status" widget="statusbar" statusbar_visible="draft,sent,quoted,review,approved,rejected,po_created,done"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1><field name="x_rfq_title" placeholder="RFQ Title"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name" readonly="1"/>
+                                <field name="partner_id"/>
+                                <field name="x_deadline"/>
+                                <field name="x_priority" widget="priority"/>
+                            </group>
+                            <group>
+                                <field name="date_order"/>
+                                <field name="amount_total"/>
+                                <field name="x_approval_notes"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Items">
+                                <field name="order_line">
+                                    <tree string="Items" editable="bottom">
+                                        <field name="name"/>
+                                        <field name="product_qty"/>
+                                        <field name="product_uom"/>
+                                        <field name="price_unit"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Vendors">
+                                <field name="vendor_ids" widget="many2many_tags"/>
+                            </page>
+                            <page string="Quotations">
+                                <field name="quotation_ids" readonly="1">
+                                    <tree>
+                                        <field name="vendor_id"/>
+                                        <field name="total_amount"/>
+                                        <field name="delivery_days"/>
+                                        <field name="status"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- RFQ Action -->
+        <record id="action_rfq_list" model="ir.actions.act_window">
+            <field name="name">RFQs</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('x_rfq_title', '!=', False)]</field>
+            <field name="context">{'default_x_status': 'draft'}</field>
+        </record>
+    </data>
+</odoo>
