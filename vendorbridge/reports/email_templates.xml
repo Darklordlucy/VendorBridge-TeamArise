@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<<odoo>
+<odoo>
     <data noupdate="1">
         <!-- RFQ Invitation Email -->
         <record id="email_template_rfq_invite" model="mail.template">
@@ -9,7 +9,6 @@
             <field name="email_from">${user.email_formatted}</field>
             <field name="partner_to">${object.vendor_ids[0].id if object.vendor_ids else ''}</field>
             <field name="body_html" type="html">
-                <![CDATA[
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                     <h2 style="color: #714B67;">New RFQ Invitation</h2>
                     <p>Dear Vendor,</p>
@@ -24,11 +23,10 @@
                         Submit Quotation
                     </a>
                     <p style="color: #666; font-size: 12px; margin-top: 30px;">
-                        This link expires on ${object.x_deadline}.<<br/>
+                        This link expires on ${object.x_deadline}.<br/>
                         VendorBridge - Procurement Simplified
                     </p>
                 </div>
-                ]]>
             </field>
         </record>
 
@@ -40,7 +38,6 @@
             <field name="email_from">${user.email_formatted}</field>
             <field name="partner_to">${object.partner_id.id}</field>
             <field name="body_html" type="html">
-                <![CDATA[
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                     <h2 style="color: #714B67;">Invoice</h2>
                     <p>Dear ${object.partner_id.name},</p>
@@ -55,10 +52,9 @@
                         VendorBridge - Procurement Simplified
                     </p>
                 </div>
-                ]]>
             </field>
-            <field name="report_template" ref="account.account_invoices"/>
-            <field name="report_name">Invoice_${(object.name).replace('/','_')}</field>
+            <!-- <field name="report_template" ref="account.account_invoices"/> -->
+            <!-- <field name="report_name">Invoice_${(object.name).replace('/','_')}</field> -->
         </record>
     </data>
 </odoo>

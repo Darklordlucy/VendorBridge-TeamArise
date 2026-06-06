@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<<odoo>
+<odoo>
     <data>
         <template id="report_invoice_document" inherit_id="account.report_invoice_document">
-            <xpath expr="//div[@class='page']" position="replace">
+            <xpath expr="//div[hasclass('page')]" position="replace">
                 <div class="page">
                     <div class="oe_structure"/>
                     <h2 style="text-align: center; color: #714B67;">Tax Invoice</h2>

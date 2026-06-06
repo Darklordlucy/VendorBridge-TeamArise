@@ -9,10 +9,10 @@
     'author': 'VendorBridge Team',
     'depends': ['base', 'purchase', 'account', 'mail', 'website', 'portal'],
     'data': [
-        'security/ir.model.access.csv',
         'security/vendorbridge_security.xml',
+        'security/ir.model.access.csv',
         'data/demo_data.xml',
-        'data/email_templates.xml',
+        'reports/email_templates.xml',
         'views/vendor_views.xml',
         'views/rfq_views.xml',
         'views/quotation_views.xml',

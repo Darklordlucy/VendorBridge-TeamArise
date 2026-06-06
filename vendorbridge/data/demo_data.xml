@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<<odoo>
+<odoo>
     <data noupdate="1">
         <!-- 10 Vendors -->
         <record id="vendor_1" model="res.partner">

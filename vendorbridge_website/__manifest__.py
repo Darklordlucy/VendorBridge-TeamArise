@@ -5,9 +5,6 @@
     'summary': 'Vendor-facing portal for VendorBridge',
     'depends': ['vendorbridge', 'website', 'portal'],
     'data': [
-        'views/vendor_portal.xml',
-        'views/rfq_list.xml',
-        'views/comparison_page.xml',
     ],
     'installable': True,
     'application': False,
