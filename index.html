@@ -771,10 +771,10 @@
                       <span class="text-sm font-semibold block text-darkText/80">₹1,62,000.00</span>
                       <span class="block text-[10px] font-normal text-darkText/50">Unit: ₹16,200.00</span>
                     </td>
-                    <!-- Global Furniture Price (Lowest, highlighted) -->
-                    <td class="py-4 px-4 bg-green-50 text-green-700 font-bold border-x border-green-200">
-                      <span class="text-sm font-bold block">₹1,38,000.00</span>
-                      <span class="block text-[10px] font-normal text-green-600/70">Unit: ₹13,800.00</span>
+                    <!-- Global Furniture Price (Lowest, styled normally without green highlight) -->
+                    <td class="py-4 px-4 text-darkText/70">
+                      <span class="text-sm font-semibold block text-darkText/80">₹1,38,000.00</span>
+                      <span class="block text-[10px] font-normal text-darkText/50">Unit: ₹13,800.00</span>
                     </td>
                   </tr>
 
@@ -783,16 +783,31 @@
                     <td class="py-4 px-4"></td>
                     <!-- Delhi Hardware summary (lowest overall, highlighted in green column summary) -->
                     <td class="py-4 px-4 bg-green-100/60 border-x border-green-200 text-cyprus font-bold">
-                      <span class="text-base font-bold block text-cyprus">Total: ₹22,50,000</span>
-                      <span class="block text-[10px] text-darkText/60 font-semibold mt-0.5">Delivery: 5 Days | 4.8★</span>
+                      <div class="flex items-center justify-between gap-4">
+                        <span class="text-base font-bold block text-cyprus">Total: ₹22,50,000</span>
+                        <div class="text-[10px] font-semibold text-right text-darkText/70 shrink-0 mt-0.5">
+                          <div class="block">Delivery: 5 Days</div>
+                          <div class="block text-yellow-600">Rating: 4.8★</div>
+                        </div>
+                      </div>
                     </td>
                     <td class="py-4 px-4">
-                      <span class="text-sm font-bold block text-cyprus">Total: ₹23,87,000</span>
-                      <span class="block text-[10px] text-darkText/60 font-semibold mt-0.5">Delivery: 8 Days | 4.2★</span>
+                      <div class="flex items-center justify-between gap-4">
+                        <span class="text-sm font-bold block text-cyprus">Total: ₹23,87,000</span>
+                        <div class="text-[10px] font-semibold text-right text-darkText/70 shrink-0 mt-0.5">
+                          <div class="block">Delivery: 8 Days</div>
+                          <div class="block text-yellow-600">Rating: 4.2★</div>
+                        </div>
+                      </div>
                     </td>
                     <td class="py-4 px-4">
-                      <span class="text-sm font-bold block text-cyprus">Total: ₹1,38,000 (Partial)</span>
-                      <span class="block text-[10px] text-darkText/60 font-semibold mt-0.5">Delivery: 12 Days | 3.9★</span>
+                      <div class="flex items-center justify-between gap-4">
+                        <span class="text-sm font-bold block text-cyprus">Total: ₹1,38,000 <span class="text-[9px] font-normal block sm:inline">(Partial)</span></span>
+                        <div class="text-[10px] font-semibold text-right text-darkText/70 shrink-0 mt-0.5">
+                          <div class="block">Delivery: 12 Days</div>
+                          <div class="block text-yellow-600">Rating: 3.9★</div>
+                        </div>
+                      </div>
                     </td>
                   </tr>
                 </tbody>
@@ -1411,13 +1426,16 @@
       if (!vendor) return;
 
       const label = document.createElement('label');
-      label.className = "flex items-center gap-3 p-2 bg-sand/30 rounded-xl cursor-pointer hover:bg-sand/60";
+      label.className = "flex items-center gap-3 p-2 bg-sand/30 rounded-xl cursor-pointer hover:bg-sand/60 w-full";
       label.innerHTML = `
         <input type="checkbox" value="${vendor.name}" checked class="rounded border-cyprus/10 text-cyprus focus:ring-cyprus">
-        <div>
+        <div class="flex-1">
           <span class="block text-xs font-bold text-cyprus">${vendor.name}</span>
           <span class="block text-[10px] text-darkText/60">GST: ${vendor.gst}</span>
         </div>
+        <button type="button" onclick="event.stopPropagation(); event.preventDefault(); removeVendorFromRFQ(this, '${vendor.name}')" class="text-red-500 hover:text-red-700 focus:outline-none p-1 transition-colors">
+          <i class="fas fa-trash-alt text-xs"></i>
+        </button>
       `;
       list.appendChild(label);
 
@@ -1428,6 +1446,17 @@
       updateRFQProgress();
       
       alert(`Supplier "${vendor.name}" added to RFQ assignment network.`);
+    }
+
+    // Remove vendor from RFQ checkbox list
+    function removeVendorFromRFQ(button, name) {
+      const label = button.closest('label');
+      if (label) {
+        label.remove();
+        populateRFQVendorSelect();
+        updateRFQProgress();
+        alert(`Supplier "${name}" removed from RFQ assignment network.`);
+      }
     }
 
     // Load standard data on load is defined at the bottom of the script
@@ -2520,25 +2549,40 @@
                       <span class="text-sm font-semibold block text-darkText/80">₹1,62,000.00</span>
                       <span class="block text-[10px] font-normal text-darkText/50">Unit: ₹16,200.00</span>
                     </td>
-                    <td class="py-4 px-4 bg-green-50 text-green-700 font-bold border-x border-green-200">
-                      <span class="text-sm font-bold block">₹1,38,000.00</span>
-                      <span class="block text-[10px] font-normal text-green-600/70">Unit: ₹13,800.00</span>
+                    <td class="py-4 px-4 text-darkText/70">
+                      <span class="text-sm font-semibold block text-darkText/80">₹1,38,000.00</span>
+                      <span class="block text-[10px] font-normal text-darkText/50">Unit: ₹13,800.00</span>
                     </td>
                   </tr>
                   <tr class="bg-sand/20 font-bold text-cyprus">
                     <td class="py-4 px-4">Summary Summary</td>
                     <td class="py-4 px-4"></td>
                     <td class="py-4 px-4 bg-green-100/60 border-x border-green-200 text-cyprus font-bold">
-                      <span class="text-base font-bold block text-cyprus">Total: ₹22,50,000</span>
-                      <span class="block text-[10px] text-darkText/60 font-semibold mt-0.5">Delivery: 5 Days | 4.8★</span>
+                      <div class="flex items-center justify-between gap-4">
+                        <span class="text-base font-bold block text-cyprus">Total: ₹22,50,000</span>
+                        <div class="text-[10px] font-semibold text-right text-darkText/70 shrink-0 mt-0.5">
+                          <div class="block">Delivery: 5 Days</div>
+                          <div class="block text-yellow-600">Rating: 4.8★</div>
+                        </div>
+                      </div>
                     </td>
                     <td class="py-4 px-4">
-                      <span class="text-sm font-bold block text-cyprus">Total: ₹23,87,000</span>
-                      <span class="block text-[10px] text-darkText/60 font-semibold mt-0.5">Delivery: 8 Days | 4.2★</span>
+                      <div class="flex items-center justify-between gap-4">
+                        <span class="text-sm font-bold block text-cyprus">Total: ₹23,87,000</span>
+                        <div class="text-[10px] font-semibold text-right text-darkText/70 shrink-0 mt-0.5">
+                          <div class="block">Delivery: 8 Days</div>
+                          <div class="block text-yellow-600">Rating: 4.2★</div>
+                        </div>
+                      </div>
                     </td>
                     <td class="py-4 px-4">
-                      <span class="text-sm font-bold block text-cyprus">Total: ₹1,38,000 (Partial)</span>
-                      <span class="block text-[10px] text-darkText/60 font-semibold mt-0.5">Delivery: 12 Days | 3.9★</span>
+                      <div class="flex items-center justify-between gap-4">
+                        <span class="text-sm font-bold block text-cyprus">Total: ₹1,38,000 <span class="text-[9px] font-normal block sm:inline">(Partial)</span></span>
+                        <div class="text-[10px] font-semibold text-right text-darkText/70 shrink-0 mt-0.5">
+                          <div class="block">Delivery: 12 Days</div>
+                          <div class="block text-yellow-600">Rating: 3.9★</div>
+                        </div>
+                      </div>
                     </td>
                   </tr>
                 </tbody>
@@ -2580,9 +2624,9 @@
                   <tr class="border-b border-cyprus/5">
                     <td class="py-4 px-4 font-medium text-cyprus">Ergonomic Standing Office Desk</td>
                     <td class="py-4 px-4 text-center">10</td>
-                    <td class="py-4 px-4 bg-green-50 text-green-700 font-bold border-x border-green-200">
-                      <span class="text-sm font-bold block">₹1,38,000.00</span>
-                      <span class="block text-[10px] font-normal text-green-600/70">Unit: ₹13,800.00</span>
+                    <td class="py-4 px-4 text-darkText/70">
+                      <span class="text-sm font-semibold block text-darkText/80">₹1,38,000.00</span>
+                      <span class="block text-[10px] font-normal text-darkText/50">Unit: ₹13,800.00</span>
                     </td>
                     <td class="py-4 px-4 bg-green-50/50 text-darkText/70 border-x border-green-200/40">
                       <span class="text-sm font-semibold block text-darkText/80">₹1,50,000.00</span>
@@ -2597,16 +2641,31 @@
                     <td class="py-4 px-4">Summary Summary</td>
                     <td class="py-4 px-4"></td>
                     <td class="py-4 px-4">
-                      <span class="text-sm font-bold block text-cyprus">Total: ₹1,38,000 (Partial)</span>
-                      <span class="block text-[10px] text-darkText/60 font-semibold mt-0.5">Delivery: 12 Days | 3.9★</span>
+                      <div class="flex items-center justify-between gap-4">
+                        <span class="text-sm font-bold block text-cyprus">Total: ₹1,38,000 <span class="text-[9px] font-normal block sm:inline">(Partial)</span></span>
+                        <div class="text-[10px] font-semibold text-right text-darkText/70 shrink-0 mt-0.5">
+                          <div class="block">Delivery: 12 Days</div>
+                          <div class="block text-yellow-600">Rating: 3.9★</div>
+                        </div>
+                      </div>
                     </td>
                     <td class="py-4 px-4 bg-green-100/60 border-x border-green-200 text-cyprus font-bold">
-                      <span class="text-base font-bold block text-cyprus">Total: ₹22,50,000</span>
-                      <span class="block text-[10px] text-darkText/60 font-semibold mt-0.5">Delivery: 5 Days | 4.8★</span>
+                      <div class="flex items-center justify-between gap-4">
+                        <span class="text-base font-bold block text-cyprus">Total: ₹22,50,000</span>
+                        <div class="text-[10px] font-semibold text-right text-darkText/70 shrink-0 mt-0.5">
+                          <div class="block">Delivery: 5 Days</div>
+                          <div class="block text-yellow-600">Rating: 4.8★</div>
+                        </div>
+                      </div>
                     </td>
                     <td class="py-4 px-4">
-                      <span class="text-sm font-bold block text-cyprus">Total: ₹23,87,000</span>
-                      <span class="block text-[10px] text-darkText/60 font-semibold mt-0.5">Delivery: 8 Days | 4.2★</span>
+                      <div class="flex items-center justify-between gap-4">
+                        <span class="text-sm font-bold block text-cyprus">Total: ₹23,87,000</span>
+                        <div class="text-[10px] font-semibold text-right text-darkText/70 shrink-0 mt-0.5">
+                          <div class="block">Delivery: 8 Days</div>
+                          <div class="block text-yellow-600">Rating: 4.2★</div>
+                        </div>
+                      </div>
                     </td>
                   </tr>
                 </tbody>
@@ -2656,25 +2715,40 @@
                       <span class="text-sm font-semibold block text-darkText/80">₹1,62,000.00</span>
                       <span class="block text-[10px] font-normal text-darkText/50">Unit: ₹16,200.00</span>
                     </td>
-                    <td class="py-4 px-4 bg-green-50 text-green-700 font-bold border-x border-green-200">
-                      <span class="text-sm font-bold block">₹1,38,000.00</span>
-                      <span class="block text-[10px] font-normal text-green-600/70">Unit: ₹13,800.00</span>
+                    <td class="py-4 px-4 text-darkText/70">
+                      <span class="text-sm font-semibold block text-darkText/80">₹1,38,000.00</span>
+                      <span class="block text-[10px] font-normal text-darkText/50">Unit: ₹13,800.00</span>
                     </td>
                   </tr>
                   <tr class="bg-sand/20 font-bold text-cyprus">
                     <td class="py-4 px-4">Summary Summary</td>
                     <td class="py-4 px-4"></td>
                     <td class="py-4 px-4 bg-green-100/60 border-x border-green-200 text-cyprus font-bold">
-                      <span class="text-base font-bold block text-cyprus">Total: ₹22,50,000</span>
-                      <span class="block text-[10px] text-darkText/60 font-semibold mt-0.5">Delivery: 5 Days | 4.8★</span>
+                      <div class="flex items-center justify-between gap-4">
+                        <span class="text-base font-bold block text-cyprus">Total: ₹22,50,000</span>
+                        <div class="text-[10px] font-semibold text-right text-darkText/70 shrink-0 mt-0.5">
+                          <div class="block">Delivery: 5 Days</div>
+                          <div class="block text-yellow-600">Rating: 4.8★</div>
+                        </div>
+                      </div>
                     </td>
                     <td class="py-4 px-4">
-                      <span class="text-sm font-bold block text-cyprus">Total: ₹23,87,000</span>
-                      <span class="block text-[10px] text-darkText/60 font-semibold mt-0.5">Delivery: 8 Days | 4.2★</span>
+                      <div class="flex items-center justify-between gap-4">
+                        <span class="text-sm font-bold block text-cyprus">Total: ₹23,87,000</span>
+                        <div class="text-[10px] font-semibold text-right text-darkText/70 shrink-0 mt-0.5">
+                          <div class="block">Delivery: 8 Days</div>
+                          <div class="block text-yellow-600">Rating: 4.2★</div>
+                        </div>
+                      </div>
                     </td>
                     <td class="py-4 px-4">
-                      <span class="text-sm font-bold block text-cyprus">Total: ₹1,38,000 (Partial)</span>
-                      <span class="block text-[10px] text-darkText/60 font-semibold mt-0.5">Delivery: 12 Days | 3.9★</span>
+                      <div class="flex items-center justify-between gap-4">
+                        <span class="text-sm font-bold block text-cyprus">Total: ₹1,38,000 <span class="text-[9px] font-normal block sm:inline">(Partial)</span></span>
+                        <div class="text-[10px] font-semibold text-right text-darkText/70 shrink-0 mt-0.5">
+                          <div class="block">Delivery: 12 Days</div>
+                          <div class="block text-yellow-600">Rating: 3.9★</div>
+                        </div>
+                      </div>
                     </td>
                   </tr>
                 </tbody>
@@ -3364,13 +3438,16 @@
       if (!vendor) return;
 
       const label = document.createElement('label');
-      label.className = "flex items-center gap-3 p-2 bg-sand/30 rounded-xl cursor-pointer hover:bg-sand/60";
+      label.className = "flex items-center gap-3 p-2 bg-sand/30 rounded-xl cursor-pointer hover:bg-sand/60 w-full";
       label.innerHTML = `
         <input type="checkbox" value="${vendor.name}" checked class="rounded border-cyprus/10 text-cyprus focus:ring-cyprus">
-        <div>
+        <div class="flex-1">
           <span class="block text-xs font-bold text-cyprus">${vendor.name}</span>
           <span class="block text-[10px] text-darkText/60">GST: ${vendor.gst}</span>
         </div>
+        <button type="button" onclick="event.stopPropagation(); event.preventDefault(); removeVendorFromRFQ(this, '${vendor.name}')" class="text-red-500 hover:text-red-700 focus:outline-none p-1 transition-colors">
+          <i class="fas fa-trash-alt text-xs"></i>
+        </button>
       `;
       list.appendChild(label);
 
@@ -3381,6 +3458,17 @@
       updateRFQProgress();
       
       alert(`Supplier "${vendor.name}" added to RFQ assignment network.`);
+    }
+
+    // Remove vendor from RFQ checkbox list
+    function removeVendorFromRFQ(button, name) {
+      const label = button.closest('label');
+      if (label) {
+        label.remove();
+        populateRFQVendorSelect();
+        updateRFQProgress();
+        alert(`Supplier "${name}" removed from RFQ assignment network.`);
+      }
     }
 
     // Load standard data on load
