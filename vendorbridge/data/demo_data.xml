@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<<odoo>
+    <data noupdate="1">
+        <!-- 10 Vendors -->
+        <record id="vendor_1" model="res.partner">
+            <field name="name">Infosys Supplies Pvt Ltd</field>
+            <field name="x_is_vendor">True</field>
+            <field name="x_gst_number">29AABCI1234A1Z5</field>
+            <field name="x_vendor_category">it_hardware</field>
+            <field name="x_vendor_status">active</field>
+            <field name="email">procurement@infosyssupplies.in</field>
+            <field name="phone">+91-80-1234-5678</field>
+            <field name="street">123 Tech Park Road</field>
+            <field name="city">Bangalore</field>
+            <field name="country_id" ref="base.in"/>
+        </record>
+
+        <record id="vendor_2" model="res.partner">
+            <field name="name">Delhi Hardware Hub</field>
+            <field name="x_is_vendor">True</field>
+            <field name="x_gst_number">07AABCU9603R1ZX</field>
+            <field name="x_vendor_category">furniture</field>
+            <field name="x_vendor_status">active</field>
+            <field name="email">contact@delhihardware.in</field>
+            <field name="phone">+91-11-2345-6789</field>
+            <field name="street">45 Industrial Area</field>
+            <field name="city">Delhi</field>
+            <field name="country_id" ref="base.in"/>
+        </record>
+
+        <record id="vendor_3" model="res.partner">
+            <field name="name">Mumbai Tech Traders</field>
+            <field name="x_is_vendor">True</field>
+            <field name="x_gst_number">27AABCM9876B2Y8</field>
+            <field name="x_vendor_category">it_hardware</field>
+            <field name="x_vendor_status">active</field>
+            <field name="email">sales@mumbaitech.in</field>
+            <field name="phone">+91-22-3456-7890</field>
+            <field name="street">78 Business District</field>
+            <field name="city">Mumbai</field>
+            <field name="country_id" ref="base.in"/>
+        </record>
+
+        <record id="vendor_4" model="res.partner">
+            <field name="name">TechCore Ltd</field>
+            <field name="x_is_vendor">True</field>
+            <field name="x_gst_number">33AABCT4567C3Z9</field>
+            <field name="x_vendor_category">it_hardware</field>
+            <field name="x_vendor_status">active</field>
+            <field name="email">orders@techcore.in</field>
+            <field name="phone">+91-44-4567-8901</field>
+            <field name="street">12 IT Corridor</field>
+            <field name="city">Chennai</field>
+            <field name="country_id" ref="base.in"/>
+        </record>
+
+        <record id="vendor_5" model="res.partner">
+            <field name="name">FastLog Transport</field>
+            <field name="x_is_vendor">True</field>
+            <field name="x_gst_number">06AABCF7890D4W1</field>
+            <field name="x_vendor_category">logistics</field>
+            <field name="x_vendor_status">active</field>
+            <field name="email">dispatch@fastlog.in</field>
+            <field name="phone">+91-172-5678-9012</field>
+            <field name="street">89 Transport Nagar</field>
+            <field name="city">Chandigarh</field>
+            <field name="country_id" ref="base.in"/>
+        </record>
+
+        <record id="vendor_6" model="res.partner">
+            <field name="name">Office Mart Co</field>
+            <field name="x_is_vendor">True</field>
+            <field name="x_gst_number">24AABCO1234E5V2</field>
+            <field name="x_vendor_category">office_supplies</field>
+            <field name="x_vendor_status">active</field>
+            <field name="email">supply@officemart.in</field>
+            <field name="phone">+91-79-6789-0123</field>
+            <field name="street">56 Commercial Complex</field>
+            <field name="city">Ahmedabad</field>
+            <field name="country_id" ref="base.in"/>
+        </record>
+
+        <record id="vendor_7" model="res.partner">
+            <field name="name">Stationery Plus</field>
+            <field name="x_is_vendor">True</field>
+            <field name="x_gst_number">09AABCS5678F6U3</field>
+            <field name="x_vendor_category">stationery</field>
+            <field name="x_vendor_status">active</field>
+            <field name="email">orders@stationeryplus.in</field>
+            <field name="phone">+91-522-7890-1234</field>
+            <field name="street">23 Paper Market</field>
+            <field name="city">Lucknow</field>
+            <field name="country_id" ref="base.in"/>
+        </record>
+
+        <record id="vendor_8" model="res.partner">
+            <field name="name">BuildWell Materials</field>
+            <field name="x_is_vendor">True</field>
+            <field name="x_gst_number">08AABCB9012G7T4</field>
+            <field name="x_vendor_category">furniture</field>
+            <field name="x_vendor_status">active</field>
+            <field name="email">sales@buildwell.in</field>
+            <field name="phone">+91-141-8901-2345</field>
+            <field name="street">67 Construction Zone</field>
+            <field name="city">Jaipur</field>
+            <field name="country_id" ref="base.in"/>
+        </record>
+
+        <record id="vendor_9" model="res.partner">
+            <field name="name">GreenTech Solutions</field>
+            <field name="x_is_vendor">True</field>
+            <field name="x_gst_number">32AABCG3456H8S5</field>
+            <field name="x_vendor_category">it_hardware</field>
+            <field name="x_vendor_status">active</field>
+            <field name="email">info@greentech.in</field>
+            <field name="phone">+91-484-9012-3456</field>
+            <field name="street">34 Eco Park</field>
+            <field name="city">Kochi</field>
+            <field name="country_id" ref="base.in"/>
+        </record>
+
+        <record id="vendor_10" model="res.partner">
+            <field name="name">Premium Logistics</field>
+            <field name="x_is_vendor">True</field>
+            <field name="x_gst_number">21AABCP7890I7R6</field>
+            <field name="x_vendor_category">logistics</field>
+            <field name="x_vendor_status">active</field>
+            <field name="email">ops@premiumlogistics.in</field>
+            <field name="phone">+91-651-0123-4567</field>
+            <field name="street">78 Express Highway</field>
+            <field name="city">Ranchi</field>
+            <field name="country_id" ref="base.in"/>
+        </record>
+
+        <!-- Demo Users -->
+        <record id="user_manager" model="res.users">
+            <field name="name">Manager Arun</field>
+            <field name="login">manager_demo</field>
+            <field name="password">manager123</field>
+            <field name="groups_id" eval="[(4, ref('base.group_user')), (4, ref('vendorbridge.group_procurement_manager'))]"/>
+        </record>
+
+        <record id="user_officer" model="res.users">
+            <field name="name">Priya Sharma</field>
+            <field name="login">officer_demo</field>
+            <field name="password">officer123</field>
+            <field name="groups_id" eval="[(4, ref('base.group_user')), (4, ref('vendorbridge.group_procurement_officer'))]"/>
+        </record>
+
+        <record id="user_vendor" model="res.users">
+            <field name="name">Rajesh Kumar</field>
+            <field name="login">vendor_demo</field>
+            <field name="password">vendor123</field>
+            <field name="groups_id" eval="[(4, ref('base.group_portal')), (4, ref('vendorbridge.group_vendor_portal'))]"/>
+            <field name="partner_id" ref="vendor_2"/>
+        </record>
+    </data>
+</odoo>
